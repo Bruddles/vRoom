@@ -23,11 +23,7 @@ function onPlayerStateChange(event) {
 }
 
 function getNextVideo() {
-	return $.get('./nextVideo').then(function(data){
-		return data.videoUrl;
-	}, function(){
-		return '';
-	});
+	socket.emit('nextVideo');
 }
 
 function playNextVideo(event){
@@ -41,9 +37,23 @@ function playNextVideo(event){
 		}, 1000);
 }
 
+
 function sendVideo(url){
 	socket.emit('addVideo', url);
 }
+
+socket.on('nextVideo', function(url){
+	var intervalId = setInterval(function(){
+			if (url === ''){
+				getNextVideo();
+			} else {
+				event.target.mute();
+				event.target.loadVideoById(url, 0, 'High');
+				event.target.playVideo();
+				clearInterval(intervalId);
+			}
+		}, 1000);
+})
 
 $('document').ready(function(){
 	$('#queue-form').delegate('#url-send', 'click', function(e) {

@@ -48,7 +48,7 @@ io.on('connection', function(socket){
 	
 	//next video
 	socket.on('nextVideo', function(){
-		socket.to(socket.roomName).emit(nextVideo(socket));
+		socket.to(socket.roomName).emit('nextVideo', nextVideo(socket));
 	});
 	
 	//disconnect (cleanup)
