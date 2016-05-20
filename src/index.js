@@ -1,4 +1,4 @@
-var player;
+let player;
 
 function onYouTubeIframeAPIReady() {
 	player = new YT.Player('player', {
@@ -41,16 +41,12 @@ function playNextVideo(event){
 		}, 1000);
 }
 
-function postVideoUrl(url) {
-	$.post('./addVideo', { 'videoUrl': url}).done( function(data){
-		console.log('Successfully added ' + url + ' to the queue');
-	}).fail(function(){
-		console.log('Failed to add ' + url + ' to the queue');
-	});
+function sendVideo(url){
+	socket.emit('addVideo', url);
 }
 
 $('document').ready(function(){
 	$('#queue-form').delegate('#url-send', 'click', function(e) {
-		postVideoUrl($('#url-input').val());
+		sendVideo($('#url-input').val());
 	})
 });
