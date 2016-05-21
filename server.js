@@ -1,4 +1,5 @@
-	//Server modules
+'use strict'
+//Server modules
 let express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
@@ -9,10 +10,14 @@ let express = require('express'),
 	names = moniker.generator([moniker.adjective, moniker.noun]),
 	//variables
 	usernames = [],
-	rooms = [],
-	usersInRoom = {},
-	videoQueue = {}, //video queue by room
-	currentIndex = {}; //current index by room
+	rooms = {};
+	
+/*
+	Room:	
+		users
+		videoQueue
+		videoHistory
+*/
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
@@ -47,8 +52,8 @@ io.on('connection', function(socket){
 	});
 	
 	//next video
-	socket.on('nextVideo', function(){
-		socket.to(socket.roomName).emit('nextVideo', nextVideo(socket));
+	socket.on('nextVideo', function(currentUrl){
+		socket.to(socket.roomName).emit('nextVideo', nextVideo(socket, currentUrl));
 	});
 	
 	//disconnect (cleanup)
@@ -58,49 +63,70 @@ io.on('connection', function(socket){
 	});
 });
 
+// Creates a new username
 function login(socket, name){
+	// create username
 	usernames.push(name);
+	// associate username with this socket
 	socket.userName = name;
 }
 
+// Creates/joins a room
 function join(socket, name){
+	// If no room name was supplied, generate one
 	if (name ===''){
 		name = names.choose();
 	}
 	
-	if (rooms.indexOf(name) === -1){
-		rooms.push(name);
-		usersInRoom[name] = [];
-		videoQueue[name] = [];
-		currentIndex[name] = 0;
+	// if room does not exist, create one
+	if (rooms[name] === undefined){
+		//TODO: create a room class
+		rooms[name] = {
+			users: [],
+			videoQueue: [],
+			videoHistory: []
+		};
 	}
 	
+	// associate socket/user with this room
 	socket.roomName = name;
 	socket.join(name);
-	usersInRoom[name].push(name);
+	rooms[name].users.push(name);
 }
 
 function addVideo(socket, url){
-	videoQueue[socket.roomName].push(url);
-}
-
-function nextVideo(socket){
-	let url;
-	
-	if (videoQueue[socket.roomName].length <= currentIndex[socket.roomName]){
-		url = '';
-	} else {
-		url = videoQueue[socket.roomName][currentIndex[socket.roomName]];
-		currentIndex[socket.roomName]++;
+	// if the current queue is empty, send out the new video id
+	if (rooms[socket.roomName].videoQueue.length === 0){
+		socket.to(socket.roomName).emit('nextVideo', url);
 	}
-	return url;
+	
+	// add the id to the queue
+	rooms[socket.roomName].videoQueue.push(url);
 }
 
+function nextVideo(socket, currentUrl){
+	// if current video on client matches current video on server
+	// move current url to history
+	if (rooms[socket.roomName].videoQueue[0] === currentUrl){
+		let removed = rooms[socket.roomName].videoQueue.splice(0, 1)[0];
+		
+		rooms[socket.roomName].videoHistory.push(removed);
+	}
+	// return next video
+	return rooms[socket.roomName] === undefined ? '' : rooms[socket.roomName].videoQueue[0];
+	
+}
+
+// Remove user from room
 function leave(socket){
+	// remove current user from the list
 	usernames.splice(usernames.indexOf(socket.userName), 1);
-	usersInRoom[socket.userName].splice(usersInRoom[socket.userName].indexOf(socket.userName), 1);
-	if (usersInRoom[socket.userName].length === 0){
-		delete usersInRoom[socket.userName];
-		rooms.splice(rooms.indexOf(socket.roomName), 1);
+	
+	// remove user from the room users list
+	rooms[socket.roomName].users.splice(rooms[socket.roomName].users.indexOf(socket.userName), 1);
+	
+	// if room is empty, delete room
+	if (rooms[socket.roomName].users.length === 0){
+		delete rooms[socket.roomName];
 	}
 }
