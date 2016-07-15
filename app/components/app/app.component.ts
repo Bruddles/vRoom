@@ -5,9 +5,11 @@ import {Component} from '@angular/core';
 	selector: 'vroom',
 	templateUrl: 'app.component.html',
 	styleUrls: ['app.component.css']
-	//selector: 'vroom',
-//template: '<h1>My First Angular 2 App</h1>'
 })
 
-export class AppComponent {}
+export class AppComponent {
+	onClick() {
+		console.log('Login clicked.');
+	}
+}
 
