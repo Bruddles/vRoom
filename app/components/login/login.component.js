@@ -14,8 +14,9 @@ var LoginComponent = (function () {
     }
     LoginComponent = __decorate([
         core_1.Component({
+            moduleId: module.id,
             selector: 'login',
-            template: "\n\t\t<div id='login-container'>\n\t\t\t<div>\n\t\t\t\t<label>Username</label>\n\t\t\t\t<input id='username-input'/>\n\t\t\t\t<button id='username-send'>Login</button>\n\t\t\t</div>\n\t\t</div>\n\t"
+            templateUrl: 'login.component.html'
         }), 
         __metadata('design:paramtypes', [])
     ], LoginComponent);

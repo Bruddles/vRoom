@@ -30,7 +30,6 @@ app.use('/app', express.static(__dirname + '/app'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/systemjs.config.js', express.static(__dirname + '/systemjs.config.js'));
-app.use('/styles.css', express.static(__dirname + '/styles.css'));
 
 app.get('/', function(req, res, next) {
   res.sendFile(path.join(__dirname, 'index.html'));

@@ -1,17 +1,9 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
+	moduleId: module.id,
 	selector: 'room-login',
-	template: `
-		<div id='room-container'>
-			<div>
-				<label>Room</label>
-				<input id='room-input'/>
-				<button id='room-join-send'>Join</button>
-				<button id='room-create-send'>Create</button>
-			</div>
-		</div>
-	`
+	templateUrl: 'room-login.component.html'
 })
 export class RoomLoginComponent{
 	constructor() { }

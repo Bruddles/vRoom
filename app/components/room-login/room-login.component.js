@@ -14,8 +14,9 @@ var RoomLoginComponent = (function () {
     }
     RoomLoginComponent = __decorate([
         core_1.Component({
+            moduleId: module.id,
             selector: 'room-login',
-            template: "\n\t\t<div id='room-container'>\n\t\t\t<div>\n\t\t\t\t<label>Room</label>\n\t\t\t\t<input id='room-input'/>\n\t\t\t\t<button id='room-join-send'>Join</button>\n\t\t\t\t<button id='room-create-send'>Create</button>\n\t\t\t</div>\n\t\t</div>\n\t"
+            templateUrl: 'room-login.component.html'
         }), 
         __metadata('design:paramtypes', [])
     ], RoomLoginComponent);
