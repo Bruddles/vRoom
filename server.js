@@ -5,6 +5,7 @@ let express = require('express'),
 	bodyParser = require('body-parser'),
 	http = require('http').Server(app),
 	io = require('socket.io')(http),
+	path = require('path'),
 	//node modules
 	moniker = require('moniker'),
 	names = moniker.generator([moniker.adjective, moniker.noun]),
@@ -25,8 +26,15 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 
 //Static served files
-app.use(express.static('src'));
-app.use(express.static('bower_components'));
+app.use('/app', express.static(__dirname + '/app'));
+app.use('/node_modules', express.static(__dirname + '/node_modules'));
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
+app.use('/systemjs.config.js', express.static(__dirname + '/systemjs.config.js'));
+app.use('/styles.css', express.static(__dirname + '/styles.css'));
+
+app.get('/', function(req, res, next) {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 http.listen(3000, function () {
 	console.log('listening on *:3000');
