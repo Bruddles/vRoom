@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {SocketIoService} from './../../services/socket-io.service';
 
 @Component({
 	moduleId: module.id,
@@ -7,5 +8,7 @@ import {Component} from '@angular/core';
 	styleUrls: ['room.component.css']
 })
 
-export class RoomComponent {}
+export class RoomComponent {
+	
+}
 

@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
+import {SocketIoService} from './../../services/socket-io.service';
 
 @Component({
 	moduleId: module.id,
@@ -10,8 +11,6 @@ import { ROUTER_DIRECTIVES } from '@angular/router';
 })
 
 export class AppComponent {
-	onClick() {
-		console.log('Login clicked.');
-	}
+	constructor(private socketIoService: SocketIoService){}
 }
 

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import {SocketIoService} from './../../services/socket-io.service';
 
 @Component({
 	moduleId: module.id,
@@ -6,5 +7,15 @@ import { Component, Input } from '@angular/core';
 	templateUrl: 'room-login.component.html'
 })
 export class RoomLoginComponent{
-	constructor() { }
+	roomname: string;
+
+	constructor(private socketIoService: SocketIoService){}
+
+	join(){
+		this.socketIoService.join(this.roomname);
+	}
+
+	create(){
+		this.socketIoService.create();
+	}
 }

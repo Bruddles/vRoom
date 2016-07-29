@@ -1,7 +1,7 @@
 <div id='login-container'>
 	<div>
 		<label>Username</label>
-		<input id='username-input'/>
-		<button id='username-send'>Login</button>
+		<input id='username-input' [(ngModel)]='username' placeholder='User'>
+		<button id='username-send' (click)='userLogin()'>Login</button>
 	</div>
 </div>

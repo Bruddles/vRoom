@@ -1,12 +1,17 @@
 import { Component, Input } from '@angular/core';
-import { ROUTER_DIRECTIVES } from '@angular/router';
+import {SocketIoService} from './../../services/socket-io.service';
 
 @Component({	
 	moduleId: module.id,
 	selector: 'login',
-	templateUrl: 'login.component.html',
-	directives: [ROUTER_DIRECTIVES]
+	templateUrl: 'login.component.html'
 })
 export class LoginComponent{
-	constructor() { }
+	username: string;
+
+	 constructor(private socketIoService: SocketIoService){}
+
+	 login(){
+	 	this.socketIoService.login(this.username);
+	 }
 }
