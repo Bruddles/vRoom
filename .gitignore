@@ -2,6 +2,6 @@ bower_components/
 node_modules/
 .vscode/
 typings/
-**/*.js
-**/*.map
+app/**/*.js
+app/**/*.map
 *.log
