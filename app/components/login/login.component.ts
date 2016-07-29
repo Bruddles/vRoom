@@ -11,7 +11,8 @@ export class LoginComponent{
 
 	 constructor(private socketIoService: SocketIoService){}
 
-	 login(){
+	 userLogin(){
+		 debugger;
 	 	this.socketIoService.login(this.username);
 	 }
 }
