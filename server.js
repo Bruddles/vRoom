@@ -45,11 +45,13 @@ io.on('connection', function(socket){
 	
 	//login
 	socket.on('login', function(name){
+		console.log('A user logged in under the name ' + name);
 		login(socket, name);
 	});
 	
 	//join room
 	socket.on('join', function(name){
+		console.log('A user joined the room ' + name);
 		join(socket, name);
 	});
 	
@@ -127,13 +129,19 @@ function nextVideo(socket, currentUrl){
 // Remove user from room
 function leave(socket){
 	// remove current user from the list
-	usernames.splice(usernames.indexOf(socket.userName), 1);
+	if (usernames.indexOf(socket.userName) > -1){
+		usernames.splice(usernames.indexOf(socket.userName), 1);
+	}
 	
 	// remove user from the room users list
-	rooms[socket.roomName].users.splice(rooms[socket.roomName].users.indexOf(socket.userName), 1);
-	
-	// if room is empty, delete room
-	if (rooms[socket.roomName].users.length === 0){
-		delete rooms[socket.roomName];
+	if (socket.roomName !== null || typeof socket.roomName !== typeof undefined){
+		rooms[socket.roomName].users.splice(rooms[socket.roomName].users.indexOf(socket.userName), 1);
+
+		// if room is empty, delete room
+		if (rooms[socket.roomName] != null && rooms[socket.roomName].users != null && rooms[socket.roomName].users.length === 0){
+			delete rooms[socket.roomName];
+		}
 	}
+	
+	
 }

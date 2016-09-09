@@ -12,7 +12,8 @@ export class LoginComponent{
 	 constructor(private socketIoService: SocketIoService){}
 
 	 userLogin(){
-		 debugger;
+		debugger;
 	 	this.socketIoService.login(this.username);
+		 //route to room login
 	 }
 }
