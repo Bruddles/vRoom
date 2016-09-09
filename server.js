@@ -134,14 +134,16 @@ function leave(socket){
 	}
 	
 	// remove user from the room users list
-	if (socket.roomName !== null || typeof socket.roomName !== typeof undefined){
+	if (!isNullOrUndefined(socket.roomName) && !isNullOrUndefined(rooms[socket.roomName]) != null && !isNullOrUndefined(rooms[socket.roomName].users)){
 		rooms[socket.roomName].users.splice(rooms[socket.roomName].users.indexOf(socket.userName), 1);
 
 		// if room is empty, delete room
-		if (rooms[socket.roomName] != null && rooms[socket.roomName].users != null && rooms[socket.roomName].users.length === 0){
+		if (rooms[socket.roomName].users.length === 0){
 			delete rooms[socket.roomName];
 		}
-	}
-	
-	
+	}	
+}
+
+function isNullOrUndefined(val){
+	return (val === null || typeof(val) !== undefined)
 }
