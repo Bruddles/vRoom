@@ -14,8 +14,4 @@ export class SocketIoService {
 		this.socket.emit('join', name);
 	}
 
-	public create(){
-		this.socket.emit('join', '');
-	}
-
 }

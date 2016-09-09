@@ -9,10 +9,10 @@ const appRoutes: Routes  = [{
 		path: '',
 		component: LoginComponent
 	}, {
-		path: 'room-login',
+		path: 'room-login/:username',
 		component: RoomLoginComponent
 	}, {
-		path: 'room',
+		path: 'room/:username/:roomname',
 		component: RoomComponent
 	}
 ];

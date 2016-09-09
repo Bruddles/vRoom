@@ -16,7 +16,7 @@ export class LoginComponent {
 	}
 
 	userLogin() {
-		let link = ['/room-login'];
+		let link = ['/room-login', this.username];
 
 		if (!!this.username && !!this.username.trim()){
 			//route to room login

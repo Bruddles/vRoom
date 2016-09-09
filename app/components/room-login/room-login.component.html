@@ -1,8 +1,8 @@
 <div id='room-container'>
 	<div>
 		<label>Room</label>
-		<input id='room-input'/>
-		<button id='room-join-send' routerLink="/room">Join</button>
-		<button id='room-create-send' routerLink="/room">Create</button>
+		<input id='room-input' [(ngModel)]='roomname' placeholder='Room'/>
+		<button id='room-join-send' (click)="join()">Join</button>
+		<button id='room-create-send' (click)="create()">Create</button>
 	</div>
 </div>
