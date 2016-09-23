@@ -58,6 +58,7 @@ io.on('connection', function(socket){
 	//add video
 	socket.on('addVideo', function(url){
 		addVideo(socket, url);
+		socket.to(socket.roomName).emit('updatedVideoQueue', sendRoomsVideoQueue(socket));
 	});
 	
 	//next video
@@ -100,7 +101,7 @@ function join(socket, name){
 	// associate socket/user with this room
 	socket.roomName = name;
 	socket.join(name);
-	rooms[name].users.push(name);
+	rooms[name].users.push(socket.userName);
 }
 
 function addVideo(socket, url){
@@ -111,6 +112,12 @@ function addVideo(socket, url){
 	
 	// add the id to the queue
 	rooms[socket.roomName].videoQueue.push(url);
+}
+
+function sendRoomsVideoQueue(socket){
+	// return videoQueue
+	return rooms[socket.roomName] === undefined ? [] : rooms[socket.roomName].videoQueue;
+	
 }
 
 function nextVideo(socket, currentUrl){

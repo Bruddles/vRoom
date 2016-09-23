@@ -5,7 +5,8 @@ import {SocketIoService} from './../../services/socket-io.service';
 @Component({
 	moduleId: module.id,
 	selector: 'login',
-	templateUrl: 'login.component.html'
+	templateUrl: 'login.component.html',
+	styleUrls: ['login.component.css']
 })
 export class LoginComponent {
 	username: string;
@@ -16,7 +17,7 @@ export class LoginComponent {
 	}
 
 	userLogin() {
-		let link = ['/room-login', this.username];
+		let link = ['/room-login'];
 
 		if (!!this.username && !!this.username.trim()){
 			//route to room login

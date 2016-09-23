@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import {SocketIoService} from './../../services/socket-io.service';
 
@@ -9,19 +9,18 @@ import {SocketIoService} from './../../services/socket-io.service';
 	styleUrls: ['room.component.css']
 })
 
-export class RoomComponent implements OnInit {
+export class RoomComponent {
 	@Input() username: string;
 	@Input() roomname: string;
+	url: string;
 	
 	constructor(
-		private route: ActivatedRoute,
 		private socketIoService: SocketIoService) { }
 
-	ngOnInit(): void {
-		this.route.params.forEach((params: Params) => {
-			this.username = params['username'];
-			this.roomname = params['roomname'];
-		});
+
+	sendVideo(){
+		this.socketIoService.addVideo(this.url);
+		this.url = '';
 	}
 }
 

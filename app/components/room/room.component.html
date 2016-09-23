@@ -5,12 +5,15 @@
 	<div id='queue-container'>
 		<div id='video-queue'>
 			<ul>
-				<li>There are no items in the queue</li>
+				<li *ngFor='let url of socketIoService.videoQueue'>
+					{{url}}
+				</li>
+				<li *ngIf='socketIoService.videoQueue.length === 0'>There are no items in the queue</li>
 			</ul>
 		</div>
 		<div id='queue-form'>
-			<input id='url-input' autocomplete='off' />
-			<button id='url-send'>Send</button>
+			<input id='url-input' [(ngModel)]='url' autocomplete='off' />
+			<button id='url-send' (click)='sendVideo()'>Send</button>
 		</div>
 	</div>
 </div>

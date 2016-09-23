@@ -2,7 +2,7 @@
   "globalDependencies": {
     "core-js": "registry:dt/core-js#0.0.0+20160317120654",
     "jasmine": "registry:dt/jasmine#2.2.0+20160505161446",
-    "node": "registry:dt/node#4.0.0+20160509154515",
+    "node": "registry:env/node#6.0.0+20160723033700",
 	"socket-io-client":"github:DefinitelyTyped/DefinitelyTyped/socket.io-client/socket.io-client.d.ts#a92dd568d7aea20ea6ea55c9ddf415fc3bd2c7a2"
   }
 }
