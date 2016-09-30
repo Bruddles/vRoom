@@ -53,12 +53,14 @@ io.on('connection', function(socket){
 	socket.on('join', function(name){
 		console.log('A user joined the room ' + name);
 		join(socket, name);
+		socket.emit('fullVideoQueue', sendVideoQueue(socket));
 	});
 	
 	//add video
 	socket.on('addVideo', function(url){
+		console.log('Adding video: ' + url);
 		addVideo(socket, url);
-		socket.to(socket.roomName).emit('updatedVideoQueue', sendRoomsVideoQueue(socket));
+		socket.to(socket.roomName).emit('updatedVideoQueue', url);
 	});
 	
 	//next video
@@ -114,7 +116,7 @@ function addVideo(socket, url){
 	rooms[socket.roomName].videoQueue.push(url);
 }
 
-function sendRoomsVideoQueue(socket){
+function sendVideoQueue(socket){
 	// return videoQueue
 	return rooms[socket.roomName] === undefined ? [] : rooms[socket.roomName].videoQueue;
 	

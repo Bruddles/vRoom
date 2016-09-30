@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import {SocketIoService} from './../../services/socket-io.service';
+import * as YouTubePlayer from 'youtube-player';
 
 @Component({
 	moduleId: module.id,
@@ -16,7 +17,6 @@ export class RoomComponent {
 	
 	constructor(
 		private socketIoService: SocketIoService) { }
-
 
 	sendVideo(){
 		this.socketIoService.addVideo(this.url);
