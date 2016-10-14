@@ -11,9 +11,11 @@ import { SocketIoService } from './../../services/socket-io.service';
 })
 
 export class RoomComponent {
-    url: string;
+    public url: string;
 
-    constructor(private socketIoService: SocketIoService) { }
+    constructor(private socketIoService: SocketIoService) { 
+        this.socketIoService.addYTAPI();
+    }
 
     sendVideo() {
         this.socketIoService.addVideo(this.url);

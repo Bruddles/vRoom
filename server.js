@@ -21,14 +21,13 @@ let express = require('express'),
 */
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+app.use(bodyParser.urlencoded({     // to support videoId-encoded bodies
 	extended: true
 })); 
 
 //Static served files
 app.use('/app', express.static(__dirname + '/app'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
-app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/systemjs.config.js', express.static(__dirname + '/systemjs.config.js'));
 
 app.get('/', function(req, res, next) {
@@ -57,15 +56,15 @@ io.on('connection', function(socket){
 	});
 	
 	//add video
-	socket.on('addVideo', function(url){
-		console.log('Adding video: ' + url);
-		addVideo(socket, url);
-		socket.to(socket.roomName).emit('updatedVideoQueue', url);
+	socket.on('addVideo', function(videoId){
+		console.log('Adding video: ' + videoId);
+		addVideo(socket, videoId);
+		socket.to(socket.roomName).emit('updatedVideoQueue', videoId);
 	});
 	
 	//next video
-	socket.on('nextVideo', function(currentUrl){
-		socket.to(socket.roomName).emit('nextVideo', nextVideo(socket, currentUrl));
+	socket.on('nextVideo', function(currentVideoId){
+		socket.to(socket.roomName).emit('nextVideo', nextVideo(socket, currentVideoId));
 	});
 	
 	//disconnect (cleanup)
@@ -106,26 +105,30 @@ function join(socket, name){
 	rooms[name].users.push(socket.userName);
 }
 
-function addVideo(socket, url){
+function addVideo(socket, videoId){
 	// if the current queue is empty, send out the new video id
 	if (rooms[socket.roomName].videoQueue.length === 0){
-		socket.to(socket.roomName).emit('nextVideo', url);
+		socket.to(socket.roomName).emit('nextVideo', videoId);
 	}
 	
 	// add the id to the queue
-	rooms[socket.roomName].videoQueue.push(url);
+	rooms[socket.roomName].videoQueue.push(videoId);
+}
+
+function sendCurrentVideo(socket){
+	// return current video
+	return rooms[socket.roomName] === undefined ? [] : rooms[socket.roomName].videoQueue[0];
 }
 
 function sendVideoQueue(socket){
 	// return videoQueue
 	return rooms[socket.roomName] === undefined ? [] : rooms[socket.roomName].videoQueue;
-	
 }
 
-function nextVideo(socket, currentUrl){
+function nextVideo(socket, currentVideoId){
 	// if current video on client matches current video on server
-	// move current url to history
-	if (rooms[socket.roomName].videoQueue[0] === currentUrl){
+	// move current videoId to history
+	if (rooms[socket.roomName].videoQueue[0] === currentVideoId){
 		let removed = rooms[socket.roomName].videoQueue.splice(0, 1)[0];
 		
 		rooms[socket.roomName].videoHistory.push(removed);

@@ -1,68 +1,38 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { window } from '@angular/platform-browser/src/facade/browser';
 
 @Injectable()
 export class YoutubeService {
-    youtube: any = {
-        ready: false,
-        player: null,
-        playerId: null,
-        videoId: null,
-        videoTitle: null,
-        playerHeight: '100%',
-        playerWidth: '100%'
-    }
+    public yTPlayer;
 
     constructor() {
         //this.setupPlayer();
     }
 
-    setupPlayer() {
-        console.log("Running Setup Player");
-        // window['onYouTubeIframeAPIReady'] = () => {
-        //     if (window['YT']) {
-        //         console.log('Youtube API is ready');
-        //         this.youtube.ready = true;
-        //         this.bindPlayer('player');
-        //         this.loadPlayer();
-        //     }
-        // };
+    public addYTAPI() {
+        const doc = window.document;
+        let scriptTag = doc.createElement("script");
+        scriptTag.type = "text/javascript";
+        scriptTag.src = "http://www.youtube.com/iframe_api";
+        doc.body.appendChild(scriptTag);
+    }
+
+    public createPlayer(playerElementId, playerHeight, playerWidth): void {
         if (window['YT'] && window['YT']['Player']) {
-            console.log('Youtube API is ready');
-            this.youtube.ready = true;
-            this.bindPlayer('player');
-            this.loadPlayer();
+            this.yTPlayer = new window['YT']['Player'](
+                playerElementId, 
+                {
+                    height: playerHeight,
+                    width: playerWidth,
+                    playerVars: {
+                        rel: 0,
+                        showinfo: 0
+                    }
+                }
+            );
+        } else {
+            console.log('YT player is not defined');
         }
-    }
-
-    bindPlayer(elementId): void {
-        this.youtube.playerId = elementId;
-    }
-
-    loadPlayer(): void {
-        if (this.youtube.ready && this.youtube.playerId) {
-            if (this.youtube.player) {
-                this.youtube.player.destroy();
-            }
-            this.youtube.player = this.createPlayer();
-        }
-    }
-
-    createPlayer(): void {
-        return new window['YT']['Player'](this.youtube.playerId, {
-            height: this.youtube.playerHeight,
-            width: this.youtube.playerWidth,
-            playerVars: {
-                rel: 0,
-                showinfo: 0
-            }
-        });
-    }
-
-    launchPlayer(id, title): void {
-        this.youtube.player.loadVideoById(id);
-        this.youtube.videoId = id;
-        this.youtube.videoTitle = title;
-        return this.youtube;
     }
 }
