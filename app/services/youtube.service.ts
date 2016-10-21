@@ -4,11 +4,11 @@ import { window } from '@angular/platform-browser/src/facade/browser';
 
 @Injectable()
 export class YoutubeService {
+    private yTPlayerInitialised: boolean = false;
+
     public yTPlayer;
 
-    constructor() {
-        //this.setupPlayer();
-    }
+    constructor() { }
 
     public addYTAPI() {
         const doc = window.document;
@@ -18,7 +18,11 @@ export class YoutubeService {
         doc.body.appendChild(scriptTag);
     }
 
-    public createPlayer(playerElementId, playerHeight, playerWidth): void {
+    public createPlayer(playerElementId, 
+        playerHeight,
+        playerWidth,
+        onReadyFunc,
+        onStateChangeFunc): void {
         if (window['YT'] && window['YT']['Player']) {
             this.yTPlayer = new window['YT']['Player'](
                 playerElementId, 
@@ -28,11 +32,31 @@ export class YoutubeService {
                     playerVars: {
                         rel: 0,
                         showinfo: 0
+                    },
+                    events: {
+                        'onReady': onReadyFunc,
+                        'onStateChange': onStateChangeFunc
                     }
                 }
             );
+            this.yTPlayerInitialised = true;
         } else {
             console.log('YT player is not defined');
+        }
+    }
+
+    public playNextVideo(videoId){
+        if (this.yTPlayerInitialised){
+            this.yTPlayer.loadVideoById(videoId, 0, 'High');
+            this.yTPlayer.playVideo();
+        }
+    }
+
+    public getCurrentVideo(): string{
+        if (this.yTPlayerInitialised){
+            return this.yTPlayer.getVideoId();
+        } else {
+            return '';
         }
     }
 }

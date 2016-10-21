@@ -24,15 +24,16 @@ export class SocketIoService {
         //Set handlers for server broadcasts
         //if anyone else in the room adds a video 
         //add it to our video queue
-        this.socket.on('updatedVideoQueue', function (videoUrl: string) {
-            _this.videoQueue.push(videoUrl);
+        this.socket.on('updatedVideoQueue', function (videoId: string) {
+            _this.videoQueue.push(videoId);
         });
 
         //upon joining a room we will get the current video queue
         this.socket.on('fullVideoQueue', function (videoQueue: string[]) {
             _this.videoQueue = videoQueue;
-            this.player.loadVideoById(videoQueue[0], 0, 'High');
-            this.player.playVideo();
+            if (videoQueue.length > 0){
+                this.youtubeService.playNextVideo(videoQueue[0]);
+            }
         });
     }
 
@@ -57,7 +58,36 @@ export class SocketIoService {
     }
 
     public createPlayer(playerElementId) {
-         this.player = this.youtubeService.createPlayer(playerElementId, 300, 600);
+         this.youtubeService.createPlayer(
+             playerElementId, 
+             300, 
+             600,
+             this.onPlayerReady,
+             this.onPlayerStateChange);
     }
 
+    public onPlayerReady() {
+        if (this.videoQueue.length > 0){
+            this.youtubeService.playNextVideo(this.videoQueue[0]);
+        }
+    }
+
+    public onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.ENDED){
+            //tell server video ENDED
+            this.socket.emit('currentVideoEnded', 
+                this.youtubeService.getCurrentVideo());
+        } else if (event.data == YT.PlayerState.PLAYING) {
+
+        } else if (event.data == YT.PlayerState.PAUSED) {
+            //send paused event
+
+        } else if (event.data == YT.PlayerState.BUFFERING) {
+
+        } else if (event.data == YT.PlayerState.CUED){
+
+        } else {
+            console.log('Unrecognised event.');
+        }
+    }
 }
