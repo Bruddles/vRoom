@@ -54,7 +54,7 @@ export class YoutubeService {
 
     public getCurrentVideo(): string{
         if (this.yTPlayerInitialised){
-            return this.yTPlayer.getVideoId();
+            return this.yTPlayer.getVideoData()['video_id'];
         } else {
             return '';
         }

@@ -29,9 +29,11 @@ export class SocketIoService {
         });
 
         //upon joining a room we will get the current video queue
+        //also triggered by thje end of the current video
         this.socket.on('fullVideoQueue', function (videoQueue: string[]) {
             _this.videoQueue = videoQueue;
             if (videoQueue.length > 0){
+                //play the current video, if it exists
                 this.youtubeService.playNextVideo(videoQueue[0]);
             }
         });
@@ -48,7 +50,7 @@ export class SocketIoService {
     }
 
     public addVideo(videoId: string) {
-        this.videoQueue.push(videoId);
+        //this.videoQueue.push(videoId);
         this.socket.emit('addVideo', videoId);
     }
 
@@ -58,12 +60,13 @@ export class SocketIoService {
     }
 
     public createPlayer(playerElementId) {
-         this.youtubeService.createPlayer(
-             playerElementId, 
-             300, 
-             600,
-             this.onPlayerReady,
-             this.onPlayerStateChange);
+        //create player
+        this.youtubeService.createPlayer(
+            playerElementId, 
+            300, 
+            600,
+            this.onPlayerReady,
+            this.onPlayerStateChange);
     }
 
     public onPlayerReady() {

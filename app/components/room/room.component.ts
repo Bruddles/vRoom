@@ -15,6 +15,7 @@ export class RoomComponent {
 
     constructor(private socketIoService: SocketIoService) { 
         this.socketIoService.addYTAPI();
+        this.socketIoService.createPlayer('player');
     }
 
     sendVideo() {
