@@ -16,8 +16,8 @@ let app = express(),
     io = socketIo(httpServer),
     moniker = require('moniker'),
     names = moniker.generator([moniker.adjective, moniker.noun]),
-    users: {} = [],
-    rooms: {} = [];
+    users: {} = {},
+    rooms: {} = {};
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support videoId-encoded bodies
@@ -55,24 +55,30 @@ io.on('connection', function (socket) {
 
     //add video
     socket.on('addVideo', function (videoId) {
-        let user = users[socket.id];
-        console.log('Adding video: ' + videoId);
-        addVideo(socket, videoId);
-        socket.to(user.room.name).emit('updatedVideoQueue', videoId);
+        let user: User = getUserFromSocket(socket);
+
+        if (isNullOrUndefined(user)){
+            console.log('Adding video: ' + videoId);
+            addVideo(socket, videoId);
+            socket.in(user.room.name).emit('updatedVideoQueue', videoId);
+        }
     });
 
     // current video ended
     socket.on('currentVideoEnded', function (currentVideoId) {
-        let user = users[socket.id];
-        //check that the current id matches out queue
-        if (currentVideoId = rooms[user.room.name].videoQueue[0]){
-            //remove the current video and add it to the history
-            rooms[user.room.name].videoHistory.push(
-                rooms[user.room.name].videoQueue.splice(0, 1)[0]
-            );
-        } 
+        let user: User = getUserFromSocket(socket);
 
-        socket.emit('fullVideoQueue', sendVideoQueue(socket));
+        if (isNullOrUndefined(user)){
+            //check that the current id matches out queue
+            if (currentVideoId = rooms[user.room.name].videoQueue[0]){
+                //remove the current video and add it to the history
+                rooms[user.room.name].videoHistory.push(
+                    rooms[user.room.name].videoQueue.splice(0, 1)[0]
+                );
+            } 
+
+            socket.emit('fullVideoQueue', sendVideoQueue(socket));
+        }
     });
 
     //disconnect (cleanup)
@@ -91,68 +97,87 @@ function login(socket, name) {
 
 // Creates/joins a room
 function join(socket, name) {
-    let user = users[socket.id],
-        room;
-        
-    // If no room name was supplied, generate one
-    if (name === '') {
-        name = names.choose();
-    }
+    let user: User = getUserFromSocket(socket),
+        room: Room;
+    
+    if (isNullOrUndefined(user)){
+        // If no room name was supplied, generate one
+        if (name === '') {
+            name = names.choose();
+        }
 
-    // if room does not exist, create one
-    if (rooms[name] === undefined) {
-        room = new Room();
-        rooms[name] = room;
-    }
+        // if room does not exist, create one
+        if (rooms[name] === undefined) {
+            room = new Room(name);
+            rooms[name] = room;
+        }
 
-    // associate socket/user with this room
-    socket.join(name);
-    rooms[name].users.push(user);
-    user.room = room;
+        // associate socket/user with this room
+        socket.join(name);
+        rooms[name].users.push(user);
+        user.room = room;
+    }
 }
 
 function addVideo(socket, videoId) {
-    let user = users[socket.id];
-    // if the current queue is empty, send out the new video id
-    if (user.room.videoQueue.length === 0) {
-        socket.to(user.room.name).emit('nextVideo', videoId);
-    }
+    let user: User = getUserFromSocket(socket);
 
-    // add the id to the queue
-    user.room.videoQueue.push(videoId);
+    if (isNullOrUndefined(user)){
+        // if the current queue is empty, send out the new video id
+        if (user.room.videoQueue.length === 0) {
+            socket.in(user.room.name).emit('nextVideo', videoId);
+        }
+
+        // add the id to the queue
+        user.room.videoQueue.push(videoId);
+    }
 }
 
 function sendCurrentVideo(socket) {
-    let user = users[socket.id];
+    let user: User = getUserFromSocket(socket);
     // return current video
-    return user.room === undefined ? [] : user.room.videoQueue[0];
+    return isNullOrUndefined(user) || isNullOrUndefined(user.room) ? [] : user.room.videoQueue[0];
 }
 
 function sendVideoQueue(socket) {
-    let user = users[socket.id];
+    let user: User = getUserFromSocket(socket);
     // return videoQueue
-    return user.room === undefined ? [] : user.room.videoQueue;
+    return isNullOrUndefined(user) || isNullOrUndefined(user.room) ? [] : user.room.videoQueue;
 }
 
 // Remove user from room
 function leave(socket) {
-    let user = users[socket.id];
+    let user: User = getUserFromSocket(socket);
 
     //remove user from current room
     //if user is in a room
-    if (user.room && user.room.name && rooms[user.room.name].users.indexOf(user) > -1){
-        rooms[user.room.name].users.splice(rooms[user.room.name].users.indexOf(user), 1);
+    if (!isNullOrUndefined(user)
+        && !isNullOrUndefined(user.room) 
+        && !isNullOrUndefined(user.room.name)
+        && rooms[user.room.name].users.indexOf(user) > -1){
+            rooms[user.room.name].users.splice(rooms[user.room.name].users.indexOf(user), 1);
 
-        // if room is empty, delete room
-        if (rooms[user.room.name].users.length === 0) {
-            delete rooms[user.room.name];
-        }
+            // if room is empty, delete room
+            if (rooms[user.room.name].users.length === 0) {
+                delete rooms[user.room.name];
+            }
     }
 
     // remove current user from the list
     delete users[socket.id];
 }
 
-function isNullOrUndefined(val) {
-    return (val === null || typeof (val) === undefined)
+function getUserFromSocket (socket): User {
+    let user: User = users[socket.id];
+
+    if (isNullOrUndefined(user)){
+        console.log('Cannot find user for socket id: ' + socket.id);
+        return null;
+    }
+
+    return user;
+}
+
+function isNullOrUndefined(val): boolean {
+    return (val === null || typeof val === "undefined")
 }

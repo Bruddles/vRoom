@@ -22,26 +22,29 @@ export class YoutubeService {
         playerWidth,
         onReadyFunc,
         onStateChangeFunc): void {
-        if (window['YT'] && window['YT']['Player']) {
-            this.yTPlayer = new window['YT']['Player'](
-                playerElementId, 
-                {
-                    height: playerHeight,
-                    width: playerWidth,
-                    playerVars: {
-                        rel: 0,
-                        showinfo: 0
-                    },
-                    events: {
-                        'onReady': onReadyFunc,
-                        'onStateChange': onStateChangeFunc
+            window['onYouTubeIframeAPIReady'] = () => {
+                this.yTPlayer = new window['YT'].Player(
+                    playerElementId, 
+                    {
+                        height: playerHeight,
+                        width: playerWidth,
+                        playerVars: {
+                            rel: 0,
+                            showinfo: 0
+                        },
+                        events: {
+                            'onReady': onReadyFunc,
+                            'onStateChange': onStateChangeFunc
+                        }
                     }
-                }
-            );
-            this.yTPlayerInitialised = true;
-        } else {
-            console.log('YT player is not defined');
-        }
+                );
+                this.yTPlayerInitialised = true;
+            }
+            if (window['YT'] && window['YT'].Player) {
+                window['onYouTubeIframeAPIReady']();
+            } else {
+                console.log('YT player is not defined');
+            }
     }
 
     public playNextVideo(videoId){
