@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "tsc && concurrently \"npm run tsc:w\" \"npm run server_old\" ",
+    "start": "tsc && concurrently \"npm run tsc:w\" \"npm run server\" ",
     "starto": "tsc && concurrently \"npm run tsc:w\" \"npm run lite\" ",
     "lite": "lite-server",
     "postinstall": "typings install",
@@ -12,7 +12,6 @@
     "tsc:w": "tsc -w",
     "typings": "typings",
     "server": "node ./server/server.js",
-    "server_old": "node server"
     
   },
   "author": "",

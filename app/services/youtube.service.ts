@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { window } from '@angular/platform-browser/src/facade/browser';
 
 @Injectable()
 export class YoutubeService {

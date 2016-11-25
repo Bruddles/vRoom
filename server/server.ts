@@ -25,12 +25,12 @@ app.use(bodyParser.urlencoded({     // to support videoId-encoded bodies
 }));
 
 //Static served files
-app.use('/app', express.static(__dirname + '/app'));
-app.use('/node_modules', express.static(__dirname + '/node_modules'));
-app.use('/systemjs.config.js', express.static(__dirname + '/systemjs.config.js'));
+app.use('/app', express.static(__dirname + '/../app'));
+app.use('/node_modules', express.static(__dirname + '/../node_modules'));
+app.use('/systemjs.config.js', express.static(__dirname + '/../systemjs.config.js'));
 
 app.get('/', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, './../index.html'));
 });
 
 httpServer.listen(3000, function () {
