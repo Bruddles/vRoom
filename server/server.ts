@@ -56,11 +56,12 @@ io.on('connection', function (socket) {
     //add video
     socket.on('addVideo', function (videoId) {
         let user: User = getUserFromSocket(socket);
+        console.log('Adding video: ' + videoId);
 
-        if (isNullOrUndefined(user)){
-            console.log('Adding video: ' + videoId);
+        if (!isNullOrUndefined(user)){
             addVideo(socket, videoId);
-            socket.in(user.room.name).emit('updatedVideoQueue', videoId);
+            //use io.sockets to go to every client in the room, including the sender
+            io.sockets.in(user.room.name).emit('updatedVideoQueue', videoId);
         }
     });
 
@@ -68,7 +69,7 @@ io.on('connection', function (socket) {
     socket.on('currentVideoEnded', function (currentVideoId) {
         let user: User = getUserFromSocket(socket);
 
-        if (isNullOrUndefined(user)){
+        if (!isNullOrUndefined(user)){
             //check that the current id matches out queue
             if (currentVideoId = rooms[user.room.name].videoQueue[0]){
                 //remove the current video and add it to the history
@@ -100,14 +101,15 @@ function join(socket, name) {
     let user: User = getUserFromSocket(socket),
         room: Room;
     
-    if (isNullOrUndefined(user)){
+    if (!isNullOrUndefined(user)){
         // If no room name was supplied, generate one
         if (name === '') {
             name = names.choose();
         }
 
+        room = rooms[name];
         // if room does not exist, create one
-        if (rooms[name] === undefined) {
+        if (room === undefined) {
             room = new Room(name);
             rooms[name] = room;
         }
@@ -122,7 +124,7 @@ function join(socket, name) {
 function addVideo(socket, videoId) {
     let user: User = getUserFromSocket(socket);
 
-    if (isNullOrUndefined(user)){
+    if (!isNullOrUndefined(user)){
         // if the current queue is empty, send out the new video id
         if (user.room.videoQueue.length === 0) {
             socket.in(user.room.name).emit('nextVideo', videoId);
