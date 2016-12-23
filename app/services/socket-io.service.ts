@@ -11,7 +11,7 @@ export class SocketIoService {
     public roomName: string;
     public videoQueue: string[];
     public videoHistory: string[];
-    public player;
+    public YoutubeService: YoutubeService;
 
     constructor(private youtubeService: YoutubeService) {
         let _this = this;
@@ -20,11 +20,15 @@ export class SocketIoService {
         this.roomName = '';
         this.videoQueue = [];
         this.videoHistory = [];
+        this.youtubeService = youtubeService;
 
         //Set handlers for server broadcasts
         //if anyone else in the room adds a video 
         //add it to our video queue
         this.socket.on('updatedVideoQueue', function (videoId: string) {
+            if (_this.videoQueue.length === 0){
+                _this.youtubeService.playNextVideo(videoId);
+            }
             _this.videoQueue.push(videoId);
         });
 
@@ -34,7 +38,7 @@ export class SocketIoService {
             _this.videoQueue = videoQueue;
             if (videoQueue.length > 0){
                 //play the current video, if it exists
-                this.youtubeService.playNextVideo(videoQueue[0]);
+                _this.youtubeService.playNextVideo(videoQueue[0]);
             }
         });
     }
@@ -65,32 +69,41 @@ export class SocketIoService {
             playerElementId, 
             300, 
             600,
-            this.onPlayerReady,
-            this.onPlayerStateChange);
+            this.onPlayerReadyFunction(),
+            this.onPlayerStateChangeFunction());
     }
 
-    public onPlayerReady() {
-        if (this.videoQueue.length > 0){
-            this.youtubeService.playNextVideo(this.videoQueue[0]);
-        }
+    public onPlayerReadyFunction() {
+        let _this = this;
+
+        return function onPlayerReady() {
+            if (_this.videoQueue.length > 0){
+                _this.youtubeService.playNextVideo(_this.videoQueue[0]);
+            }
+        };
     }
 
-    public onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.ENDED){
-            //tell server video ENDED
-            this.socket.emit('currentVideoEnded', 
-                this.youtubeService.getCurrentVideo());
-        } else if (event.data == YT.PlayerState.PLAYING) {
+    public onPlayerStateChangeFunction() {
+        let _this = this;
 
-        } else if (event.data == YT.PlayerState.PAUSED) {
-            //send paused event
+        return function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.ENDED){
+                //tell server video ENDED
+                _this.socket.emit('currentVideoEnded', 
+                    _this.youtubeService.getCurrentVideo());
+            } else if (event.data == YT.PlayerState.PLAYING) {
 
-        } else if (event.data == YT.PlayerState.BUFFERING) {
+            } else if (event.data == YT.PlayerState.PAUSED) {
+                //send paused event
 
-        } else if (event.data == YT.PlayerState.CUED){
+            } else if (event.data == YT.PlayerState.BUFFERING) {
 
-        } else {
-            console.log('Unrecognised event.');
+            } else if (event.data == YT.PlayerState.CUED){
+
+            } else {
+                console.log('Unrecognised event.');
+            }
         }
+        
     }
 }

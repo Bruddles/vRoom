@@ -78,7 +78,7 @@ io.on('connection', function (socket) {
                 );
             } 
 
-            socket.emit('fullVideoQueue', sendVideoQueue(socket));
+            io.sockets.in(user.room.name).emit('fullVideoQueue', sendVideoQueue(socket));
         }
     });
 
