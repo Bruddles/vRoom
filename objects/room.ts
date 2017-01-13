@@ -1,10 +1,11 @@
 import {User} from './user';
+import {Video} from './video';
 
 export class Room {
     public name: string
     public users: User[]
-    public videoQueue: string[]
-    public videoHistory: string[]
+    public videoQueue: Video[]
+    public videoHistory: Video[]
 
     constructor(name: string){
         this.name = name;

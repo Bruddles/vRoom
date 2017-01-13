@@ -8,8 +8,9 @@ import * as bodyParser from 'body-parser';
 import * as path from 'path';
 import * as socketIo from 'socket.io';
 //import * as moniker from 'moniker';
-import {Room} from './room';
-import {User} from './user';
+import {Room} from '../objects/room';
+import {User} from '../objects/user';
+import {Video} from '../objects/video';
 
 let app = express(),
     httpServer = require('http').Server(app),
@@ -17,7 +18,8 @@ let app = express(),
     moniker = require('moniker'),
     names = moniker.generator([moniker.adjective, moniker.noun]),
     users: {} = {},
-    rooms: {} = {};
+    rooms: {} = {},
+    videoCount = 1;
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support videoId-encoded bodies
@@ -55,30 +57,49 @@ io.on('connection', function (socket) {
 
     //add video
     socket.on('addVideo', function (videoId) {
-        let user: User = getUserFromSocket(socket);
+        let user: User = getUserFromSocket(socket),
+            video: Video = new Video(videoCount, videoId);
+        
+        videoCount++;
         console.log('Adding video: ' + videoId);
 
         if (!isNullOrUndefined(user)){
-            addVideo(socket, videoId);
+            addVideo(socket, video);
             //use io.sockets to go to every client in the room, including the sender
-            io.sockets.in(user.room.name).emit('updatedVideoQueue', videoId);
+            io.sockets.in(user.room.name).emit('updatedVideoQueue', video);
         }
     });
 
     // current video ended
-    socket.on('currentVideoEnded', function (currentVideoId) {
+    socket.on('currentVideoEnded', function (currentVideo) {
         let user: User = getUserFromSocket(socket);
 
         if (!isNullOrUndefined(user)){
             //check that the current id matches out queue
-            if (currentVideoId = rooms[user.room.name].videoQueue[0]){
+            if (currentVideo == rooms[user.room.name].videoQueue[0]){
                 //remove the current video and add it to the history
-                rooms[user.room.name].videoHistory.push(
-                    rooms[user.room.name].videoQueue.splice(0, 1)[0]
-                );
-            } 
-
+                let endedVideo = rooms[user.room.name].videoQueue.splice(0, 1)[0];
+                endedVideo.state = YT.PlayerState.ENDED;
+                rooms[user.room.name].videoHistory.push(endedVideo);
+                rooms[user.room.name].videoQueue[0].state = YT.PlayerState.PLAYING;
+            }
             io.sockets.in(user.room.name).emit('fullVideoQueue', sendVideoQueue(socket));
+        }
+    });
+
+    socket.on('currentVideoPlaying', function (currentVideo) {
+
+    });
+
+    socket.on('currentVideoPaused', function (currentVideo) {
+
+    });
+
+    socket.on('updateStartTime', function () {
+        let user: User = getUserFromSocket(socket);
+
+        if (!isNullOrUndefined(user)){
+            rooms[user.room.name].videoQueue[0].setStartTime();
         }
     });
 
@@ -121,17 +142,12 @@ function join(socket, name) {
     }
 }
 
-function addVideo(socket, videoId) {
+function addVideo(socket, video: Video) {
     let user: User = getUserFromSocket(socket);
 
     if (!isNullOrUndefined(user)){
-        // if the current queue is empty, send out the new video id
-        if (user.room.videoQueue.length === 0) {
-            socket.in(user.room.name).emit('nextVideo', videoId);
-        }
-
         // add the id to the queue
-        user.room.videoQueue.push(videoId);
+        user.room.videoQueue.push(video);
     }
 }
 
@@ -144,7 +160,9 @@ function sendCurrentVideo(socket) {
 function sendVideoQueue(socket) {
     let user: User = getUserFromSocket(socket);
     // return videoQueue
-    return isNullOrUndefined(user) || isNullOrUndefined(user.room) ? [] : user.room.videoQueue;
+    return isNullOrUndefined(user) || isNullOrUndefined(user.room) 
+        ? [] 
+        : user.room.videoQueue;
 }
 
 // Remove user from room

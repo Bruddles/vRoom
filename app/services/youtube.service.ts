@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import {Video} from '../../objects/video';
 
 @Injectable()
 export class YoutubeService {
@@ -47,14 +48,20 @@ export class YoutubeService {
             }
     }
 
-    public playNextVideo(videoId){
+    public playNextVideo(video: Video){
         if (this.yTPlayerInitialised){
-            this.yTPlayer.loadVideoById(videoId, 0, 'High');
+            //Get seconds difference between now and the time the video was started
+            let dateNow: number = Date.now(),
+                videoTimeStarted = video.timeStarted ? video.timeStarted : dateNow,
+                seekToSeconds: number = Math.floor((dateNow - videoTimeStarted) / 1000);
+
+            this.yTPlayer.loadVideoById(video.videoId, 0, 'High');
+            this.yTPlayer.seekTo(seekToSeconds, true)
             this.yTPlayer.playVideo();
         }
     }
 
-    public getCurrentVideo(): string{
+    public getCurrentVideoId(): string{
         if (this.yTPlayerInitialised){
             return this.yTPlayer.getVideoData()['video_id'];
         } else {

@@ -3,14 +3,15 @@ import { Observable } from "rxjs";
 import * as io from "socket.io-client";
 // import * as YouTubePlayer from 'youtube-player';
 import { YoutubeService } from './youtube.service';
+import {Video} from '../../objects/video';
 
 @Injectable()
 export class SocketIoService {
     public socket = io();
     public userName: string;
     public roomName: string;
-    public videoQueue: string[];
-    public videoHistory: string[];
+    public videoQueue: Video[];
+    public videoHistory: Video[];
     public YoutubeService: YoutubeService;
 
     constructor(private youtubeService: YoutubeService) {
@@ -25,20 +26,22 @@ export class SocketIoService {
         //Set handlers for server broadcasts
         //if anyone else in the room adds a video 
         //add it to our video queue
-        this.socket.on('updatedVideoQueue', function (videoId: string) {
+        this.socket.on('updatedVideoQueue', function (video: Video) {
             if (_this.videoQueue.length === 0){
-                _this.youtubeService.playNextVideo(videoId);
+                _this.youtubeService.playNextVideo(video);
+                _this.socket.emit('updateStartTime');
             }
-            _this.videoQueue.push(videoId);
+            _this.videoQueue.push(video);
         });
 
         //upon joining a room we will get the current video queue
         //also triggered by thje end of the current video
-        this.socket.on('fullVideoQueue', function (videoQueue: string[]) {
+        this.socket.on('fullVideoQueue', function (videoQueue: Video[]) {
             _this.videoQueue = videoQueue;
             if (videoQueue.length > 0){
                 //play the current video, if it exists
                 _this.youtubeService.playNextVideo(videoQueue[0]);
+                _this.socket.emit('updateStartTime');
             }
         });
     }
@@ -89,12 +92,14 @@ export class SocketIoService {
         return function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.ENDED){
                 //tell server video ENDED
-                _this.socket.emit('currentVideoEnded', 
-                    _this.youtubeService.getCurrentVideo());
+                _this.socket.emit('currentVideoEnded', _this.videoQueue[0]);
             } else if (event.data == YT.PlayerState.PLAYING) {
-
+                _this.socket.emit('currentVideoPlaying', _this.videoQueue[0])
             } else if (event.data == YT.PlayerState.PAUSED) {
+                _this.videoQueue[0].setPlayTime(_this.youtubeService.yTPlayer.getCurrentTime);
                 //send paused event
+                _this.socket.emit('currentVideoPaused', 
+                    _this.videoQueue[0]);
 
             } else if (event.data == YT.PlayerState.BUFFERING) {
 
