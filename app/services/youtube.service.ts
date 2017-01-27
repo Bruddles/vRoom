@@ -50,13 +50,8 @@ export class YoutubeService {
 
     public playNextVideo(video: Video){
         if (this.yTPlayerInitialised){
-            //Get seconds difference between now and the time the video was started
-            let dateNow: number = Date.now(),
-                videoTimeStarted = video.timeStarted ? video.timeStarted : dateNow,
-                seekToSeconds: number = Math.floor((dateNow - videoTimeStarted) / 1000);
-
             this.yTPlayer.loadVideoById(video.videoId, 0, 'High');
-            this.yTPlayer.seekTo(seekToSeconds, true)
+            this.yTPlayer.seekTo((video.elaspsedTime/1000), true)
             this.yTPlayer.playVideo();
         }
     }

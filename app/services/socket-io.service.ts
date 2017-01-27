@@ -29,7 +29,6 @@ export class SocketIoService {
         this.socket.on('updatedVideoQueue', function (video: Video) {
             if (_this.videoQueue.length === 0){
                 _this.youtubeService.playNextVideo(video);
-                _this.socket.emit('updateStartTime');
             }
             _this.videoQueue.push(video);
         });
@@ -41,8 +40,17 @@ export class SocketIoService {
             if (videoQueue.length > 0){
                 //play the current video, if it exists
                 _this.youtubeService.playNextVideo(videoQueue[0]);
-                _this.socket.emit('updateStartTime');
             }
+        });
+
+        this.socket.on('playCurrentVideo', function (){
+            _this.videoQueue[0].videoStarted();
+            _this.videoQueue[0].state = YT.PlayerState.PLAYING;
+        });
+
+        this.socket.on('pauseCurrentVideo', function (){
+            _this.videoQueue[0].videoStopped();
+            _this.videoQueue[0].state = YT.PlayerState.PAUSED;
         });
     }
 
@@ -92,11 +100,12 @@ export class SocketIoService {
         return function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.ENDED){
                 //tell server video ENDED
-                _this.socket.emit('currentVideoEnded', _this.videoQueue[0]);
+                _this.socket.emit('currentVideoEnded', 
+                    _this.videoQueue[0]);
             } else if (event.data == YT.PlayerState.PLAYING) {
-                _this.socket.emit('currentVideoPlaying', _this.videoQueue[0])
+                _this.socket.emit('currentVideoPlaying', 
+                    _this.videoQueue[0])
             } else if (event.data == YT.PlayerState.PAUSED) {
-                _this.videoQueue[0].setPlayTime(_this.youtubeService.yTPlayer.getCurrentTime);
                 //send paused event
                 _this.socket.emit('currentVideoPaused', 
                     _this.videoQueue[0]);

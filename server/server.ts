@@ -76,30 +76,39 @@ io.on('connection', function (socket) {
 
         if (!isNullOrUndefined(user)){
             //check that the current id matches out queue
-            if (currentVideo == rooms[user.room.name].videoQueue[0]){
+            if (currentVideo.equals(rooms[user.room.name].videoQueue[0])){
                 //remove the current video and add it to the history
                 let endedVideo = rooms[user.room.name].videoQueue.splice(0, 1)[0];
+
                 endedVideo.state = YT.PlayerState.ENDED;
+                endedVideo.videoStopped();
                 rooms[user.room.name].videoHistory.push(endedVideo);
                 rooms[user.room.name].videoQueue[0].state = YT.PlayerState.PLAYING;
+                rooms[user.room.name].videoQueue[0].videoStarted();
+
+                io.sockets.in(user.room.name).emit('fullVideoQueue', sendVideoQueue(socket));
             }
-            io.sockets.in(user.room.name).emit('fullVideoQueue', sendVideoQueue(socket));
         }
     });
 
     socket.on('currentVideoPlaying', function (currentVideo) {
-
-    });
-
-    socket.on('currentVideoPaused', function (currentVideo) {
-
-    });
-
-    socket.on('updateStartTime', function () {
         let user: User = getUserFromSocket(socket);
 
         if (!isNullOrUndefined(user)){
-            rooms[user.room.name].videoQueue[0].setStartTime();
+            rooms[user.room.name].videoQueue[0].videoStarted();
+            rooms[user.room.name].videoQueue[0].state = YT.PlayerState.PLAYING;
+            socket.to(user.room.name).emit('playCurrentVideo');
+            
+        }
+    });
+
+    socket.on('currentVideoPaused', function (currentVideo) {
+        let user: User = getUserFromSocket(socket);
+
+        if (!isNullOrUndefined(user)){
+            rooms[user.room.name].videoQueue[0].videoStopped();
+            rooms[user.room.name].videoQueue[0].state = YT.PlayerState.PAUSED;
+            socket.to(user.room.name).emit('pauseCurrentVideo');
         }
     });
 
