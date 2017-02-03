@@ -11,6 +11,7 @@ import * as socketIo from 'socket.io';
 import {Room} from '../objects/room';
 import {User} from '../objects/user';
 import {Video} from '../objects/video';
+import {VideoState} from '../objects/video-state';
 
 let app = express(),
     httpServer = require('http').Server(app),
@@ -28,6 +29,7 @@ app.use(bodyParser.urlencoded({     // to support videoId-encoded bodies
 
 //Static served files
 app.use('/app', express.static(__dirname + '/../app'));
+app.use('/objects', express.static(__dirname + '/../objects'));
 app.use('/node_modules', express.static(__dirname + '/../node_modules'));
 app.use('/systemjs.config.js', express.static(__dirname + '/../systemjs.config.js'));
 
@@ -80,10 +82,10 @@ io.on('connection', function (socket) {
                 //remove the current video and add it to the history
                 let endedVideo = rooms[user.room.name].videoQueue.splice(0, 1)[0];
 
-                endedVideo.state = YT.PlayerState.ENDED;
+                endedVideo.state = VideoState.ENDED;
                 endedVideo.videoStopped();
                 rooms[user.room.name].videoHistory.push(endedVideo);
-                rooms[user.room.name].videoQueue[0].state = YT.PlayerState.PLAYING;
+                rooms[user.room.name].videoQueue[0].state = VideoState.PLAYING;
                 rooms[user.room.name].videoQueue[0].videoStarted();
 
                 io.sockets.in(user.room.name).emit('fullVideoQueue', sendVideoQueue(socket));
@@ -96,7 +98,7 @@ io.on('connection', function (socket) {
 
         if (!isNullOrUndefined(user)){
             rooms[user.room.name].videoQueue[0].videoStarted();
-            rooms[user.room.name].videoQueue[0].state = YT.PlayerState.PLAYING;
+            rooms[user.room.name].videoQueue[0].state = VideoState.PLAYING;
             socket.to(user.room.name).emit('playCurrentVideo');
             
         }
@@ -107,7 +109,7 @@ io.on('connection', function (socket) {
 
         if (!isNullOrUndefined(user)){
             rooms[user.room.name].videoQueue[0].videoStopped();
-            rooms[user.room.name].videoQueue[0].state = YT.PlayerState.PAUSED;
+            rooms[user.room.name].videoQueue[0].state = VideoState.PAUSED;
             socket.to(user.room.name).emit('pauseCurrentVideo');
         }
     });

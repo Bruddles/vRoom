@@ -4,6 +4,8 @@ import * as io from "socket.io-client";
 // import * as YouTubePlayer from 'youtube-player';
 import { YoutubeService } from './youtube.service';
 import {Video} from '../../objects/video';
+import {Room} from '../../objects/room';
+import {VideoState} from '../../objects/video-state'; 
 
 @Injectable()
 export class SocketIoService {
@@ -45,12 +47,12 @@ export class SocketIoService {
 
         this.socket.on('playCurrentVideo', function (){
             _this.videoQueue[0].videoStarted();
-            _this.videoQueue[0].state = YT.PlayerState.PLAYING;
+            _this.videoQueue[0].state = VideoState.PLAYING;
         });
 
         this.socket.on('pauseCurrentVideo', function (){
             _this.videoQueue[0].videoStopped();
-            _this.videoQueue[0].state = YT.PlayerState.PAUSED;
+            _this.videoQueue[0].state = VideoState.PAUSED;
         });
     }
 

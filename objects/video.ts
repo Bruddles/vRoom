@@ -1,11 +1,12 @@
 import {Stopwatch} from './stopwatch'
+import {VideoState} from './video-state'
 
 export class Video {
     private _stopwatch: Stopwatch
 
     public id: number
     public videoId: string
-    public state: YT.PlayerState
+    public state: VideoState
 
     get elaspsedTime() {
         return this._stopwatch.elapsedTime;
@@ -14,7 +15,7 @@ export class Video {
     constructor(id: number, videoId: string){
         this.id = id
         this.videoId = videoId;
-        this.state = YT.PlayerState.UNSTARTED;
+        this.state = VideoState.UNSTARTED;
 
         this._stopwatch = new Stopwatch();
     }
