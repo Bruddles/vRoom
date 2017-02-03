@@ -5,7 +5,8 @@ import { SocketIoService } from './../../services/socket-io.service';
 @Component({
 	moduleId: module.id,
 	selector: 'room-login',
-	templateUrl: 'room-login.component.html'
+	templateUrl: 'room-login.component.html',
+	styleUrls: ['room-login.component.css']
 })
 export class RoomLoginComponent {
 	@Input() username: string;

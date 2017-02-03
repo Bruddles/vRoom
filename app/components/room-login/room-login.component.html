@@ -1,9 +1,7 @@
-<div id='room-container'>
-	<h1 id="welcome-header">Welcome, {{socketIoService.userName}}</h1>
-	<div>
-		<label>Room</label>
-		<input id='room-input' [(ngModel)]='roomname' placeholder='Room'/>
-		<button id='room-join-send' (click)="join()">Join</button>
-		<button id='room-create-send' (click)="create()">Create</button>
-	</div>
+<div id='room-login-container'>
+    <h1 id="welcome-header">Welcome, {{socketIoService.userName}}</h1>
+    <div class="form-group form-inline" id="room-login">
+        <input class="form-control" id='room-input' [(ngModel)]='roomname' placeholder='Room' />
+        <button class="btn btn-default" id='room-join-send' (click)="join()">Join</button>
+    </div>
 </div>

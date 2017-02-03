@@ -1,11 +1,31 @@
-#container {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
+#room-container {
+    height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
+}
+
+#welcome-header {
+    margin: 5rem auto;
+}
+
+#room {
+    height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: stretch;
 }
 
 #video-player-container {
 	flex: 1 0 0;
+}
+
+#player {
+    margin: auto;
 }
 
 #queue-container {

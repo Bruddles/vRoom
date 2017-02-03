@@ -1,20 +1,25 @@
-<div id='container'>
-	<div id='video-player-container'>
-		<h1 id="welcome-header">Welcome to {{socketIoService.roomName}}, {{socketIoService.userName}}</h1>
-		<div id="player">Please join a room...</div>
-	</div>
-	<div id='queue-container'>
-		<div id='video-queue'>
-			<ul>
-				<li *ngFor='let url of socketIoService.videoQueue'>
-					{{url}}
-				</li>
-				<li *ngIf='socketIoService.videoQueue.length === 0'>There are no items in the queue</li>
-			</ul>
-		</div>
-		<div id='queue-form'>
-			<input id='url-input' [(ngModel)]='url' autocomplete='off' />
-			<button id='url-send' (click)='sendVideo()'>Send</button>
-		</div>
-	</div>
+<div id='room-container'>
+    <h1 id="welcome-header">
+        Welcome to {{socketIoService.roomName}}, {{socketIoService.userName}}
+    </h1>
+    <div id="room">
+        <div id='video-player-container'>
+            <div id="player">Please join a room...</div>
+        </div>
+        <div id='queue-container'>
+            <div id='video-queue'>
+                <ul>
+                    <li *ngFor='let url of socketIoService.videoQueue'>
+                        {{url}}
+                    </li>
+                    <li *ngIf='socketIoService.videoQueue.length === 0'>There are no items in the queue</li>
+                </ul>
+            </div>
+            <div class="form-group form-inline" id='queue-form'>
+                <input class="form-control" id='url-input' [(ngModel)]='url' autocomplete='off' />
+                <button class="btn btn-default" id='url-send' (click)='sendVideo()'>Send</button>
+            </div>
+        </div>
+    </div>
+
 </div>

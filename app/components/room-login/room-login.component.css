@@ -1,0 +1,16 @@
+#room-login-container {
+    height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
+}
+
+#welcome-header {
+    margin: 5rem auto;
+}
+
+#room-login {
+    margin: auto;
+}

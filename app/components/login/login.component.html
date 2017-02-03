@@ -1,8 +1,7 @@
-<div id='login-container'>
-	<h1 id="welcome-header">Welcome to vRoom</h1>
-	<div>
-		<label>Username</label>
-		<input id='username-input' [(ngModel)]='username' placeholder='User'>
-		<button id='username-send' (click)='userLogin()'>Login</button>
-	</div>
+<div id="login-container">
+    <h1 id="welcome-header">Welcome to vRoom</h1>
+    <div class="form-group form-inline" id="username">
+        <input class="form-control" id="username-input" [(ngModel)]="username" placeholder="Username">
+        <button class="btn btn-default" id="username-send" (click)="userLogin()">Login</button>
+    </div>
 </div>
