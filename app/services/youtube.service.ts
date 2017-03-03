@@ -54,20 +54,22 @@ export class YoutubeService {
             this.yTPlayer.loadVideoById(video.videoId, 0, 'High');
             this.yTPlayer.seekTo((video.elaspsedTime/1000), true)
             this.yTPlayer.playVideo();
+            video.videoStarted();
         }
     }
 
-    public playPauseVideo(video: Video){
-        switch (video.state){
-            case VideoState.PAUSED:
-            case VideoState.UNSTARTED:
-                this.yTPlayer.playVideo();
-            case VideoState.PLAYING:
-                this.yTPlayer.pauseVideo();
-            case VideoState.ENDED:
-                console.log('Current video has ended.');
-        }
+    public pauseVideo(video: Video){
+        this.yTPlayer.seekTo((video.elaspsedTime/1000), true)
+        this.yTPlayer.pauseVideo();
+        video.videoStopped();
     }
+
+    public playVideo(video: Video){
+        this.yTPlayer.seekTo((video.elaspsedTime/1000), true)
+        this.yTPlayer.playVideo();
+        video.videoStarted();
+    }
+
 
     public getCurrentVideoId(): string{
         if (this.yTPlayerInitialised){

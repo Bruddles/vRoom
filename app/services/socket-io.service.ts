@@ -47,15 +47,11 @@ export class SocketIoService {
         });
 
         this.socket.on('playCurrentVideo', function (){
-            _this.videoQueue[0].videoStarted();
-            _this.videoQueue[0].state = VideoState.PLAYING;
-            youtubeService.playPauseVideo(_this.videoQueue[0]);
+            youtubeService.playVideo(_this.videoQueue[0]);
         });
 
         this.socket.on('pauseCurrentVideo', function (){
-            _this.videoQueue[0].videoStopped();
-            _this.videoQueue[0].state = VideoState.PAUSED;
-            youtubeService.playPauseVideo(_this.videoQueue[0]);
+            youtubeService.pauseVideo(_this.videoQueue[0]);
         });
     }
 

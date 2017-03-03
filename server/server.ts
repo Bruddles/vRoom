@@ -82,10 +82,8 @@ io.on('connection', function (socket) {
                 //remove the current video and add it to the history
                 let endedVideo = rooms[user.room.name].videoQueue.splice(0, 1)[0];
 
-                endedVideo.state = VideoState.ENDED;
-                endedVideo.videoStopped();
+                endedVideo.videoEnded();
                 rooms[user.room.name].videoHistory.push(endedVideo);
-                rooms[user.room.name].videoQueue[0].state = VideoState.PLAYING;
                 rooms[user.room.name].videoQueue[0].videoStarted();
 
                 io.sockets.in(user.room.name).emit('fullVideoQueue', sendVideoQueue(socket));
@@ -98,8 +96,7 @@ io.on('connection', function (socket) {
 
         if (!isNullOrUndefined(user)){
             rooms[user.room.name].videoQueue[0].videoStarted();
-            rooms[user.room.name].videoQueue[0].state = VideoState.PLAYING;
-            socket.to(user.room.name).emit('playCurrentVideo');
+            io.sockets.in(user.room.name).emit('playCurrentVideo');
             
         }
     });
@@ -109,8 +106,7 @@ io.on('connection', function (socket) {
 
         if (!isNullOrUndefined(user)){
             rooms[user.room.name].videoQueue[0].videoStopped();
-            rooms[user.room.name].videoQueue[0].state = VideoState.PAUSED;
-            socket.to(user.room.name).emit('pauseCurrentVideo');
+            io.sockets.in(user.room.name).emit('pauseCurrentVideo');
         }
     });
 

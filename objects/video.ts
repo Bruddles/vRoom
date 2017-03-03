@@ -21,10 +21,17 @@ export class Video {
     }
 
     public videoStarted() {
+        this.state = VideoState.PLAYING;
         this._stopwatch.start();
     }
 
     public videoStopped() {
+        this.state = VideoState.PAUSED;
+        this._stopwatch.stop();
+    }
+    
+    public videoEnded() {
+        this.state = VideoState.ENDED;
         this._stopwatch.stop();
     }
 
