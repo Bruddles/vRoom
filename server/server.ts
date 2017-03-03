@@ -68,7 +68,7 @@ io.on('connection', function (socket) {
         if (!isNullOrUndefined(user)){
             addVideo(socket, video);
             //use io.sockets to go to every client in the room, including the sender
-            io.sockets.in(user.room.name).emit('updatedVideoQueue', video);
+            io.sockets.in(user.room.name).emit('updatedVideoQueue', video.getData());
         }
     });
 
@@ -173,7 +173,7 @@ function sendVideoQueue(socket) {
     // return videoQueue
     return isNullOrUndefined(user) || isNullOrUndefined(user.room) 
         ? [] 
-        : user.room.videoQueue;
+        : user.room.videoQueue.map(v => {return v.getData();});
 }
 
 // Remove user from room

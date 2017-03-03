@@ -28,7 +28,9 @@
             'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
             'socket.io-client': 'npm:socket.io-client',
             'youtube-player': 'npm:youtube-player/dist',
-            'video-state': 'objects'
+            'video': 'objects',
+            'video-state': 'objects',
+            'stopwatch': 'objects'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
@@ -46,10 +48,18 @@
             'youtube-player': { 
                 defaultExtension: "js" 
             },
+            'video': { 
+                main: 'video.js', 
+                defaultExtension: "js"
+            },
             'video-state': { 
                 main: 'video-state.js', 
                 defaultExtension: "js"
             },
+            'stopwatch': { 
+                main: 'stopwatch.js', 
+                defaultExtension: "js"
+            }
         }
     });
 })(this);

@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import {Video} from '../../objects/video';
+import {VideoState} from '../../objects/video-state';
 
 @Injectable()
 export class YoutubeService {
@@ -53,6 +54,18 @@ export class YoutubeService {
             this.yTPlayer.loadVideoById(video.videoId, 0, 'High');
             this.yTPlayer.seekTo((video.elaspsedTime/1000), true)
             this.yTPlayer.playVideo();
+        }
+    }
+
+    public playPauseVideo(video: Video){
+        switch (video.state){
+            case VideoState.PAUSED:
+            case VideoState.UNSTARTED:
+                this.yTPlayer.playVideo();
+            case VideoState.PLAYING:
+                this.yTPlayer.pauseVideo();
+            case VideoState.ENDED:
+                console.log('Current video has ended.');
         }
     }
 

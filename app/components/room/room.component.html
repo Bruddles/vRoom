@@ -9,8 +9,8 @@
         <div id='queue-container'>
             <div id='video-queue'>
                 <ul>
-                    <li *ngFor='let url of socketIoService.videoQueue'>
-                        {{url}}
+                    <li *ngFor='let video of socketIoService.videoQueue'>
+                        {{video.videoId}}
                     </li>
                     <li *ngIf='socketIoService.videoQueue.length === 0'>There are no items in the queue</li>
                 </ul>

@@ -17,6 +17,11 @@ export class Stopwatch {
             : this._elapsedTime
     }
 
+    constructor(elapsedTime: number, startedAt: number){
+        this._elapsedTime = elapsedTime;
+        this._startedAt = startedAt;
+    }
+
     public start() {
         this._startedAt = this._startedAt ? this._startedAt : this.now();
     }
@@ -24,5 +29,16 @@ export class Stopwatch {
     public stop() {
         this.calculateElapsed();
         this._startedAt = 0;
+    }
+
+    public getData(){
+        return {
+            elapsedTime: this.elapsedTime,
+            startedAt: this._startedAt
+        };
+    }
+
+    public static init(data){
+        return new Stopwatch(data.elapsedTime, data.startedAt);
     }
 }

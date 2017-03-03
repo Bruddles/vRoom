@@ -17,7 +17,7 @@ export class Video {
         this.videoId = videoId;
         this.state = VideoState.UNSTARTED;
 
-        this._stopwatch = new Stopwatch();
+        this._stopwatch = new Stopwatch(0, 0);
     }
 
     public videoStarted() {
@@ -30,6 +30,22 @@ export class Video {
 
     public equals(video: Video): boolean{
         return (this.id === video.id && this.videoId === video.videoId);
+    }
+
+    public getData(){
+        return {
+            id: this.id,
+            videoId: this.videoId,
+            state: this.state,
+            stopwatch: this._stopwatch.getData()
+        }
+    }
+
+    public static init(data){
+        let video: Video = new Video(data.id, data.videoId);
+        video.state = data.state;
+        video._stopwatch = Stopwatch.init(data.stopwatch);
+        return video;
     }
 }
 

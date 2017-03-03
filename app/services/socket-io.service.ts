@@ -28,7 +28,8 @@ export class SocketIoService {
         //Set handlers for server broadcasts
         //if anyone else in the room adds a video 
         //add it to our video queue
-        this.socket.on('updatedVideoQueue', function (video: Video) {
+        this.socket.on('updatedVideoQueue', function (videoData: Object) {
+            let video: Video = Video.init(videoData);
             if (_this.videoQueue.length === 0){
                 _this.youtubeService.playNextVideo(video);
             }
@@ -37,22 +38,24 @@ export class SocketIoService {
 
         //upon joining a room we will get the current video queue
         //also triggered by thje end of the current video
-        this.socket.on('fullVideoQueue', function (videoQueue: Video[]) {
-            _this.videoQueue = videoQueue;
-            if (videoQueue.length > 0){
+        this.socket.on('fullVideoQueue', function (videoDataQueue: Object[]) {
+            _this.videoQueue = videoDataQueue.map(d => {return Video.init(d);});
+            if (_this.videoQueue.length > 0){
                 //play the current video, if it exists
-                _this.youtubeService.playNextVideo(videoQueue[0]);
+                _this.youtubeService.playNextVideo(_this.videoQueue[0]);
             }
         });
 
         this.socket.on('playCurrentVideo', function (){
             _this.videoQueue[0].videoStarted();
             _this.videoQueue[0].state = VideoState.PLAYING;
+            youtubeService.playPauseVideo(_this.videoQueue[0]);
         });
 
         this.socket.on('pauseCurrentVideo', function (){
             _this.videoQueue[0].videoStopped();
             _this.videoQueue[0].state = VideoState.PAUSED;
+            youtubeService.playPauseVideo(_this.videoQueue[0]);
         });
     }
 
