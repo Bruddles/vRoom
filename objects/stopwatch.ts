@@ -3,7 +3,6 @@ export class Stopwatch {
     private _startedAt: number = 0
 
     get elapsedTime(): number {
-        this.calculateElapsed();
         return this._elapsedTime
     }
 
@@ -13,7 +12,7 @@ export class Stopwatch {
 
     private calculateElapsed(){
         this._elapsedTime = this._startedAt 
-            ? (this._elapsedTime + this.now() - this._startedAt) 
+            ? (this._elapsedTime + (this.now() - this._startedAt))
             : this._elapsedTime
     }
 

@@ -45,20 +45,20 @@ io.on('connection', function (socket) {
     console.log('A user connected.');
 
     //login
-    socket.on('login', function (name) {
+    socket.on('login', function socketLogin(name) {
         console.log('A user logged in under the name ' + name);
         login(socket, name);
     });
 
     //join room
-    socket.on('join', function (name) {
+    socket.on('join', function socketJoin(name) {
         console.log('A user joined the room ' + name);
         join(socket, name);
         socket.emit('fullVideoQueue', sendVideoQueue(socket));
     });
 
     //add video
-    socket.on('addVideo', function (videoId) {
+    socket.on('addVideo', function socketAddVideo(videoId) {
         let user: User = getUserFromSocket(socket),
             video: Video = new Video(videoCount, videoId);
         
@@ -73,8 +73,9 @@ io.on('connection', function (socket) {
     });
 
     // current video ended
-    socket.on('currentVideoEnded', function (currentVideo) {
-        let user: User = getUserFromSocket(socket);
+    socket.on('currentVideoEnded', function socketCurrentVideoEnded(currentVideoData) {
+        let user: User = getUserFromSocket(socket),
+            currentVideo = Video.init(currentVideoData);
 
         if (!isNullOrUndefined(user)){
             //check that the current id matches out queue
@@ -91,27 +92,30 @@ io.on('connection', function (socket) {
         }
     });
 
-    socket.on('currentVideoPlaying', function (currentVideo) {
-        let user: User = getUserFromSocket(socket);
+    socket.on('currentVideoPlaying', function socketCurrentVideoPlaying(currentVideoData) {
+        let user: User = getUserFromSocket(socket),
+            currentVideo = Video.init(currentVideoData);
 
-        if (!isNullOrUndefined(user)){
+        if (!isNullOrUndefined(user) && rooms[user.room.name].videoQueue[0].equals(currentVideo)){
+            rooms[user.room.name].videoQueue[0] = currentVideo;
             rooms[user.room.name].videoQueue[0].videoStarted();
-            io.sockets.in(user.room.name).emit('playCurrentVideo');
-            
+            io.sockets.in(user.room.name).emit('playCurrentVideo', rooms[user.room.name].videoQueue[0].getData());
         }
     });
 
-    socket.on('currentVideoPaused', function (currentVideo) {
-        let user: User = getUserFromSocket(socket);
+    socket.on('currentVideoPaused', function socketCurrentVideoPaused(currentVideoData) {
+        let user: User = getUserFromSocket(socket),
+            currentVideo = Video.init(currentVideoData);
 
-        if (!isNullOrUndefined(user)){
+        if (!isNullOrUndefined(user) && rooms[user.room.name].videoQueue[0].equals(currentVideo)){
+            rooms[user.room.name].videoQueue[0] = currentVideo;
             rooms[user.room.name].videoQueue[0].videoStopped();
-            io.sockets.in(user.room.name).emit('pauseCurrentVideo');
+            io.sockets.in(user.room.name).emit('pauseCurrentVideo', rooms[user.room.name].videoQueue[0].getData());
         }
     });
 
     //disconnect (cleanup)
-    socket.on('disconnect', function () {
+    socket.on('disconnect', function socketDisconnect() {
         console.log('A user disconnected');
         leave(socket);
     });
