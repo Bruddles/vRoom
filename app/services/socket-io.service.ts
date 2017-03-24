@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import * as io from "socket.io-client";
-// import * as YouTubePlayer from 'youtube-player';
 import { YoutubeService } from './youtube.service';
 import {Video} from '../../objects/video';
 import {Room} from '../../objects/room';

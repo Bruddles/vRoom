@@ -27,7 +27,6 @@
             'rxjs': 'npm:rxjs',
             'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
             'socket.io-client': 'npm:socket.io-client',
-            'youtube-player': 'npm:youtube-player/dist',
             'video': 'objects',
             'video-state': 'objects',
             'stopwatch': 'objects'
