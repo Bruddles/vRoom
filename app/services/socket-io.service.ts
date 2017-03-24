@@ -109,23 +109,36 @@ export class SocketIoService {
         let _this = this;
 
         return function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.ENDED && _this.videoQueue[0].state !== VideoState.ENDED){
-                console.log('Player State Change: Video Ended');
-                _this.socket.emit('currentVideoEnded', _this.videoQueue[0].getData());
-            } else if (event.data == YT.PlayerState.PLAYING && _this.videoQueue[0].state !== VideoState.PLAYING) {
-                console.log('Player State Change: Video Playing');
-                _this.socket.emit('currentVideoPlaying', _this.videoQueue[0].getData());
-            } else if (event.data == YT.PlayerState.PAUSED && _this.videoQueue[0].state !== VideoState.PAUSED) {
-                console.log('Player State Change: Video Paused');
-                _this.socket.emit('currentVideoPaused', _this.videoQueue[0].getData());
-            } else if (event.data == YT.PlayerState.BUFFERING && _this.videoQueue[0].state !== VideoState.BUFFERING) {
-                console.log('Player State Change: Video Buffering');
-            } else if (event.data == YT.PlayerState.CUED && _this.videoQueue[0].state !== VideoState.CUED){
-
-            } else {
-                console.log('Unrecognised event.');
+            let newState = event.data;
+            switch (newState){
+                case YT.PlayerState.UNSTARTED:
+                    console.log('Player State Change: Video Unstarted');
+                    break;
+                case YT.PlayerState.ENDED:
+                    console.log('Player State Change: Video Ended');
+                    break;
+                case YT.PlayerState.PLAYING:
+                    console.log('Player State Change: Video Playing');
+                    if (newState !== _this.videoQueue[0].state){
+                        _this.socket.emit('currentVideoPlaying', _this.videoQueue[0].getData());
+                    }
+                    break;
+                case YT.PlayerState.PAUSED:
+                    console.log('Player State Change: Video Paused');
+                    if (newState !== _this.videoQueue[0].state){
+                        _this.socket.emit('currentVideoPaused', _this.videoQueue[0].getData());
+                    }
+                    break;
+                case YT.PlayerState.BUFFERING:
+                    console.log('Player State Change: Video Buffering');
+                    break;
+                case YT.PlayerState.CUED:
+                    console.log('Player State Change: Video Cued');
+                    break;
+                default:
+                    console.log('Unrecognised event.');
+                    break;
             }
         }
-        
     }
 }

@@ -32,7 +32,9 @@ export class YoutubeService {
                         width: playerWidth,
                         playerVars: {
                             rel: 0,
-                            showinfo: 0
+                            showinfo: 0,
+                            autoplay: 0//,
+                            //controls: 0
                         },
                         events: {
                             'onReady': onReadyFunc,
@@ -51,36 +53,26 @@ export class YoutubeService {
 
     public playNextVideo(video: Video){
         if (this.yTPlayerInitialised){
-            this.yTPlayer.loadVideoById(video.videoId, 0, 'High');
+            this.yTPlayer.cueVideoById(video.videoId, 0, 'High');
             if (video.state === VideoState.PLAYING || video.state === VideoState.UNSTARTED ){
                 this.playVideo(video);
             } else if (video.state === VideoState.PAUSED){
                 this.pauseVideo(video);
             }
-            video.videoStarted();
         }
     }
 
     public pauseVideo(video: Video){
         //console.log('Pausing video at ' + (video.elaspsedTime/1000) + 's');
+        this.yTPlayer.seekTo((video.elaspsedTime/1000), true);
         this.yTPlayer.pauseVideo();
-        this.yTPlayer.seekTo((video.elaspsedTime/1000), true)
         video.videoStopped();
     }
 
     public playVideo(video: Video){
         //console.log('Playing video at ' + (video.elaspsedTime/1000) + 's');
-        this.yTPlayer.seekTo((video.elaspsedTime/1000), true)
+        this.yTPlayer.seekTo((video.elaspsedTime/1000), true);
         this.yTPlayer.playVideo();
         video.videoStarted();
-    }
-
-
-    public getCurrentVideoId(): string{
-        if (this.yTPlayerInitialised){
-            return this.yTPlayer.getVideoData()['video_id'];
-        } else {
-            return '';
-        }
     }
 }
