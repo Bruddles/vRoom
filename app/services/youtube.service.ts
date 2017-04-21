@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
 import {Video} from '../../objects/video';
 import {VideoState} from '../../objects/video-state';
 

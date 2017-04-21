@@ -1,6 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { SocketIoService } from './../../services/socket-io.service';
+import { YoutubeDataApi } from './../../services/youtube-data-api.service';
+
+import { SearchResult } from './../../../objects/search-result'
 
 
 @Component({
@@ -12,10 +15,16 @@ import { SocketIoService } from './../../services/socket-io.service';
 
 export class RoomComponent {
     public url: string;
+    public searchString: string
+    public searchResults: SearchResult[]
 
-    constructor(private socketIoService: SocketIoService) { 
+    constructor(private socketIoService: SocketIoService, 
+        private youtubeDataApi : YoutubeDataApi) { 
         this.socketIoService.addYTAPI();
         this.socketIoService.createPlayer('player');
+        this.youtubeDataApi.addGAPI();
+        this.youtubeDataApi.initialiseGAPI();
+
     }
 
     sendVideo() {

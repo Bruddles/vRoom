@@ -20,6 +20,18 @@
                 <button class="btn btn-default" id='url-send' (click)='sendVideo()'>Send</button>
             </div>
         </div>
+        <div id='search-container'>
+            <div id='search-input'>
+                <input class="form-control" id='search-input' [(ngModel)]='searchString' autocomplete='off' />
+                <button class="btn btn-default" id='search-add' (click)='addVideo()'>Add</button>
+            </div>
+            <div id='search-results'>
+                <ul>
+                    <li *ngFor='let result of searchResults'>
+                        {{result.videoId}}
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-
 </div>

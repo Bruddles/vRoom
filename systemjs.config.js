@@ -29,7 +29,8 @@
             'socket.io-client': 'npm:socket.io-client',
             'video': 'objects',
             'video-state': 'objects',
-            'stopwatch': 'objects'
+            'stopwatch': 'objects',
+            'search-result': 'objects'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
@@ -56,6 +57,10 @@
                 defaultExtension: "js"
             },
             'stopwatch': { 
+                main: 'stopwatch.js', 
+                defaultExtension: "js"
+            },
+            'search-result': { 
                 main: 'stopwatch.js', 
                 defaultExtension: "js"
             }
