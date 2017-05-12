@@ -23,13 +23,17 @@ export class RoomComponent {
         this.socketIoService.addYTAPI();
         this.socketIoService.createPlayer('player');
         this.youtubeDataApi.addGAPI();
-        this.youtubeDataApi.initialiseGAPI();
+        //this.youtubeDataApi.initialiseGAPI();
 
     }
 
     sendVideo() {
         this.socketIoService.addVideo(this.url);
         this.url = '';
+    }
+
+    searchVideo(){
+        this.searchResults = this.youtubeDataApi.search(this.searchString);
     }
 }
 
