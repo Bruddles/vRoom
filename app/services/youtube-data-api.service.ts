@@ -16,19 +16,16 @@ export class YoutubeDataApi {
         let scriptTag = doc.createElement("script");
         doc.body.appendChild(scriptTag);
         scriptTag.type = "text/javascript";
-        scriptTag.onload = this.initialiseGAPI;
-        scriptTag.src = "https://apis.google.com/js/api.js";
+        scriptTag.onload = () => {this.initialiseGAPI(this);}
+        scriptTag.src = "https://apis.google.com/js/client.js";
     }
 
-    public initialiseGAPI(){
-        if (window['gapi'] && !this.gapiInitialised){
-            this.gapi = window['gapi'];
-            this.gapi.load('youtube', 'v3', () => {
-                this.gapi.client.init({
-                    'apiKey': this._apiKey,
-                    'discoveryDocs': ['https://people.googleapis.com/$discovery/rest'],
-                }).then(() => {
-                    this.gapiInitialised = true;
+    public initialiseGAPI(_this){
+        if (window['gapi'] && !_this.gapiInitialised){
+            _this.gapi = window['gapi'];
+            _this.gapi.load('client', () => {
+                _this.gapi.client.load('youtube', 'v3', () => {
+                    _this.gapiInitialised = true;
                     console.log('GAPI Loaded');
                 });
             });
@@ -40,7 +37,7 @@ export class YoutubeDataApi {
             console.log('GAPI is not initialised');
             return [];
         } else {
-             var request = this.gapi.client.youtube.search.list({
+            let request = this.gapi.client.youtube.search.list({
                     q: query,
                     part: 'snippet'
                 }),
