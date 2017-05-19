@@ -28,7 +28,10 @@
                 <button class="btn btn-default" id='search' (click)='searchVideo()'>Search</button>
             </div>
             <div id='search-results-container'>
-                <div class='search-result' *ngFor='let result of searchResults'>
+                <div class='search-result' 
+                    *ngFor='let result of searchResults' 
+                    (click)='selectVideo($event, {{result}})'
+                    [ngClass]="{search-result-selected: selectedResults.indexOf(result) !== -1}">
                     <img class='search-result-thumbnail' src='{{result.videoThumbnail}}'/>
                     <div class='search-result-text'>
                         <p class='search-result-title'>{{result.videoTitle}}</p>
