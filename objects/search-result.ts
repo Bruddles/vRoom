@@ -1,7 +1,11 @@
 export class SearchResult{
-    public videoID: string
+    public videoId: string
+    public videoTitle: string
+    public videoThumbnail: string
     
-    constructor(videoID: string){
-        this.videoID = videoID;
+    constructor(videoId: string, videoTitle: string, videoThumbnail: string){
+        this.videoId = videoId;
+        this.videoTitle = videoTitle;
+        this.videoThumbnail = videoThumbnail;
     }
 }

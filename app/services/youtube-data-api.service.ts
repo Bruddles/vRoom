@@ -24,6 +24,7 @@ export class YoutubeDataApi {
         if (window['gapi'] && !_this.gapiInitialised){
             _this.gapi = window['gapi'];
             _this.gapi.load('client', () => {
+                _this.gapi.client.setApiKey(_this._apiKey);
                 _this.gapi.client.load('youtube', 'v3', () => {
                     _this.gapiInitialised = true;
                     console.log('GAPI Loaded');
@@ -39,19 +40,22 @@ export class YoutubeDataApi {
         } else {
             let request = this.gapi.client.youtube.search.list({
                     q: query,
-                    part: 'snippet'
+                    part: 'snippet',
+                    type: 'video'
                 }),
-                results : SearchResult[], 
+                results : SearchResult[] = [], 
                 str;
 
             request.execute(function(response) {
-                str = JSON.stringify(response.result);
                 response['items'].forEach(element => {
-                    results.push(new SearchResult(element['id']['videoId']))
+                    let id: string = element['id']['videoId'],
+                        title: string = element['snippet']['title'],
+                        thumb: string = element['snippet']['thumbnails']['default']['url'];
+                    results.push(new SearchResult(id, title, thumb))
                 });
             });
 
-            console.log(str);
+            console.log(results);
             return results;
         }
         
