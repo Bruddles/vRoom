@@ -26,12 +26,13 @@
             <div id='search-input'>
                 <input class="form-control" id='search-input' [(ngModel)]='searchString' autocomplete='off' />
                 <button class="btn btn-default" id='search' (click)='searchVideo()'>Search</button>
+                <button class="btn btn-default" id='search' (click)='searchVideo2()'>Search2</button>
             </div>
             <div id='search-results-container'>
                 <div class='search-result' 
-                    *ngFor='let result of searchResults' 
-                    (click)='selectVideo($event, {{result}})'
-                    [ngClass]="{search-result-selected: selectedResults.indexOf(result) !== -1}">
+                    *ngFor='let result of searchResults' >
+                    <!-- (click)='selectVideo($event, {{result}})' -->
+                    <!--[ngClass]="{search-result-selected: selectedResults.indexOf(result) !== -1}"-->
                     <img class='search-result-thumbnail' src='{{result.videoThumbnail}}'/>
                     <div class='search-result-text'>
                         <p class='search-result-title'>{{result.videoTitle}}</p>
