@@ -74,9 +74,9 @@ export class SocketIoService {
         this.socket.emit('join', name);
     }
 
-    public addVideo(videoId: string) {
+    public addVideo(videoId: string, title: string, thumb: string) {
         //this.videoQueue.push(videoId);
-        this.socket.emit('addVideo', videoId);
+        this.socket.emit('addVideo', videoId, title, thumb);
     }
 
     //Youtube service method wrappers

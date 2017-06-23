@@ -58,9 +58,9 @@ io.on('connection', function (socket) {
     });
 
     //add video
-    socket.on('addVideo', function socketAddVideo(videoId) {
+    socket.on('addVideo', function socketAddVideo(videoId, title, thumbnail) {
         let user: User = getUserFromSocket(socket),
-            video: Video = new Video(videoCount, videoId);
+            video: Video = new Video(videoCount, videoId, title, thumbnail);
         
         videoCount++;
         console.log('Adding video: ' + videoId);

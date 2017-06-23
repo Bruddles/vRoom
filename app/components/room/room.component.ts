@@ -40,7 +40,7 @@ export class RoomComponent {
     }
 
     sendVideo() {
-        this.socketIoService.addVideo(this.url);
+        this.socketIoService.addVideo(this.url, null, null);
         this.url = '';
     }
 
@@ -65,6 +65,12 @@ export class RoomComponent {
         }
         //flip the selected boolean
         result.selected = !result.selected;
+    }
+
+    sendSelectedVideos() {
+        this.searchResults.map((curr, ind, arr) => {
+            this.socketIoService.addVideo(curr.videoId, curr.videoTitle, curr.videoThumbnail);
+        })
     }
 }
 

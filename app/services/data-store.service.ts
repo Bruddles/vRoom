@@ -6,16 +6,16 @@ export class DataStoreService {
     static readonly ROOMNAME: string = 'roomname'
     
     get username(): string {
-        return localStorage.getItem(DataStoreService.USERNAME);
+        return sessionStorage.getItem(DataStoreService.USERNAME);
     }
     set username(value: string) {
-        localStorage.setItem(DataStoreService.USERNAME, value);
+        sessionStorage.setItem(DataStoreService.USERNAME, value);
     }
 
     get roomname(): string {
-        return localStorage.getItem(DataStoreService.ROOMNAME);
+        return sessionStorage.getItem(DataStoreService.ROOMNAME);
     }
     set roomname(value: string) {
-        localStorage.setItem(DataStoreService.ROOMNAME, value);
+        sessionStorage.setItem(DataStoreService.ROOMNAME, value);
     }
 }
