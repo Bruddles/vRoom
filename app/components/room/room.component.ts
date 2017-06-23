@@ -1,7 +1,9 @@
 import { Component, Input, NgZone} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+
 import { SocketIoService } from './../../services/socket-io.service';
 import { YoutubeDataApi } from './../../services/youtube-data-api.service';
+import { DataStoreService } from './../../services/data-store.service';
 
 import { SearchResult } from './../../../objects/search-result'
 import { Video } from './../../../objects/video'
@@ -22,10 +24,19 @@ export class RoomComponent {
 
     constructor(private socketIoService: SocketIoService, 
         private youtubeDataApi : YoutubeDataApi,
+		private dataStoreService: DataStoreService,
         private zone : NgZone) { 
+
+        if (!!this.dataStoreService.username){
+			this.socketIoService.login(this.dataStoreService.username);
+        }
+        if (!!this.dataStoreService.roomname){
+			this.socketIoService.join(this.dataStoreService.roomname);
+        }    
         this.socketIoService.addYTAPI();
         this.socketIoService.createPlayer('player');
         this.youtubeDataApi.addGAPI();
+        this.selectedResults = [];
     }
 
     sendVideo() {
@@ -46,13 +57,14 @@ export class RoomComponent {
         });
     }
 
-    selectVideo(selected: SearchResult){
-        let index = this.selectedResults.indexOf(selected);
-        if (index !== -1) {
-            this.selectedResults.push(selected);
+    selectVideo(event: Event, result: SearchResult){
+        if (result.selected) {
+            this.selectedResults.splice(this.selectedResults.indexOf(result), 1);
         } else {
-            this.selectedResults.splice(index, 1);
+            this.selectedResults.push(result);
         }
+        //flip the selected boolean
+        result.selected = !result.selected;
     }
 }
 

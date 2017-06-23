@@ -11,6 +11,7 @@ import { RoomLoginComponent } from '../../components/room-login/room-login.compo
 import { SocketIoService } from '../../services/socket-io.service';
 import { YoutubeService } from '../../services/youtube.service';
 import { YoutubeDataApi } from '../../services/youtube-data-api.service';
+import { DataStoreService } from '../../services/data-store.service';
 
 import { routing } from '../../components/app/app.routing';
 
@@ -29,7 +30,8 @@ import { routing } from '../../components/app/app.routing';
     providers: [
         SocketIoService,
         YoutubeService,
-        YoutubeDataApi],
+        YoutubeDataApi,
+        DataStoreService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
