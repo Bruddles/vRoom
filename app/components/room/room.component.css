@@ -22,7 +22,7 @@
 }
 
 #video-player-container {
-	flex: 2 0 0;
+	flex: 1 0 0;
 }
 
 .iframe-container {
@@ -46,16 +46,40 @@
     flex: 1 0 0;
 }
 
+.queue-item{
+    flex: 1 0 0;
+    
+    height: 120px;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.queue-item-id {
+    display: none;
+}
+
+#search-container {
+	flex: 1 0 0;
+}
+
+#search-input{
+    flex: 1 0 0;
+
+    display: flex;
+    flex-direction: row;
+}
+
 #search-results-container {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    height: 100%;
 	flex: 1 0 0;
 }
 
 .search-result{
-    width: 160px;
+    
     height: 120px;
     padding: 1rem;
 
@@ -71,3 +95,7 @@
     border: 0.5rem solid green;
 }
 
+#search-results-send-container {
+    
+    flex: 1 0 0;
+}

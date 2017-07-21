@@ -10,19 +10,24 @@
         </div>
         <div id='queue-container'>
             <div id='video-queue'>
-                <ul>
-                    <li *ngFor='let video of socketIoService.videoQueue'>
-                        {{video.videoId}}
-                    </li>
-                    <li *ngIf='socketIoService.videoQueue.length === 0'>There are no items in the queue</li>
-                </ul>
+                <div class='queue-item' 
+                    *ngFor='let item of socketIoService.videoQueue'>
+                    <img class='queue-item-thumbnail' src='{{item.videoThumbnail}}'/>
+                    <div class='queue-item-text'>
+                        <p class='queue-item-title'>{{item.videoTitle}}</p>
+                        <p class='queue-item-id' >{{item.videoId}}</p>
+                    </div>
+                </div>
+                <div class='queue-item' *ngIf='socketIoService.videoQueue.length === 0'>
+                    <p>There are no items in the queue</p>
+                </div>
             </div>
         </div>
         <div id='search-container'>
             <div id='search-input'>
                 <input class="form-control" id='search-input' [(ngModel)]='searchString' autocomplete='off' />
                 <button class="btn btn-default" id='search' (click)='searchVideo()'>Search</button>
-                <button class="btn btn-default" id='search' (click)='searchVideo2()'>Search2</button>
+                <!-- <button class="btn btn-default" id='search' (click)='searchVideo2()'>Search2</button> -->
             </div>
             <div id='search-results-container'>
                 <div class='search-result' 
@@ -36,7 +41,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group form-inline" id='queue-form'>
+            <div class="form-group form-inline" id='search-results-send-container'>
                 <button class="btn btn-default" id='send' (click)='sendSelectedVideos()'>Send</button>
             </div>
         </div>
