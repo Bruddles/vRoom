@@ -24,9 +24,9 @@
             </div>
         </div>
         <div id='search-container'>
-            <div id='search-input'>
+            <div id='search-input-container'>
                 <input class="form-control" id='search-input' [(ngModel)]='searchString' autocomplete='off' />
-                <button class="btn btn-default" id='search' (click)='searchVideo()'>Search</button>
+                <button class="btn btn-default form-control" id='search-button' (click)='searchVideo()'>Search</button>
                 <!-- <button class="btn btn-default" id='search' (click)='searchVideo2()'>Search2</button> -->
             </div>
             <div id='search-results-container'>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="form-group form-inline" id='search-results-send-container'>
-                <button class="btn btn-default" id='send' (click)='sendSelectedVideos()'>Send</button>
+                <button class="btn btn-default form-control" id='send-button' (click)='sendSelectedVideos()'>Send</button>
             </div>
         </div>
     </div>

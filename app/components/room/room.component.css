@@ -44,6 +44,8 @@
 
 #video-queue {
     flex: 1 0 0;
+
+    overflow-y: scroll;
 }
 
 .queue-item{
@@ -61,27 +63,45 @@
 }
 
 #search-container {
+    display: flex;
+    flex-direction: column;
+
 	flex: 1 0 0;
+    padding: 1rem;
+    height: 100%;
 }
 
-#search-input{
+#search-input-container{
     flex: 1 0 0;
 
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+}
+
+#search-input{
+    flex: 10 0 0;
+}
+
+#search-button{
+    flex: 1 1 0;
 }
 
 #search-results-container {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-	flex: 1 0 0;
+    flex: 5 0 0;
+    
+    overflow-y: scroll;
 }
 
 .search-result{
-    
-    height: 120px;
+    min-height: 120px;
+    max-height: 120px;
     padding: 1rem;
+
+    flex: 1 0 0;
 
     display: flex;
     flex-direction: row;
@@ -96,6 +116,5 @@
 }
 
 #search-results-send-container {
-    
     flex: 1 0 0;
 }
