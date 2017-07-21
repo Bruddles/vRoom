@@ -68,7 +68,7 @@ export class RoomComponent {
     }
 
     sendSelectedVideos() {
-        this.searchResults.map((curr, ind, arr) => {
+        this.selectedResults.map((curr, ind, arr) => {
             this.socketIoService.addVideo(curr.videoId, curr.videoTitle, curr.videoThumbnail);
         })
     }

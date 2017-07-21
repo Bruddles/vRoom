@@ -115,6 +115,7 @@ export class SocketIoService {
                     break;
                 case YT.PlayerState.ENDED:
                     console.log('Player State Change: Video Ended');
+                    _this.socket.emit('currentVideoEnded', _this.videoQueue[0].getData());
                     break;
                 case YT.PlayerState.PLAYING:
                     console.log('Player State Change: Video Playing');

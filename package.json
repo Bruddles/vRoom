@@ -12,7 +12,6 @@
     "tsc:w": "tsc -w",
     "typings": "typings",
     "server": "node ./server/server.js"
-    
   },
   "author": "",
   "license": "ISC",
