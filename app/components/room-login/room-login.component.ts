@@ -17,7 +17,7 @@ export class RoomLoginComponent {
 		private router: Router,
 		private socketIoService: SocketIoService,
 		private dataStoreService: DataStoreService) { 
-        if (!!this.dataStoreService.username){
+        if (!!this.dataStoreService.username && !(!!this.socketIoService.userName)){
 			this.socketIoService.login(this.dataStoreService.username);
         }
     }

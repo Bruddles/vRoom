@@ -27,10 +27,10 @@ export class RoomComponent {
 		private dataStoreService: DataStoreService,
         private zone : NgZone) { 
 
-        if (!!this.dataStoreService.username){
+        if (!!this.dataStoreService.username  && !(!!this.socketIoService.userName)){
 			this.socketIoService.login(this.dataStoreService.username);
         }
-        if (!!this.dataStoreService.roomname){
+        if (!!this.dataStoreService.roomname  && !(!!this.socketIoService.roomName)){
 			this.socketIoService.join(this.dataStoreService.roomname);
         }    
         this.socketIoService.addYTAPI();
