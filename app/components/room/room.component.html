@@ -31,7 +31,7 @@
             </div>
             <div id='search-results-container'>
                 <div class='search-result' 
-                    *ngFor='let result of searchResults'
+                    *ngFor='let result of searchResults?.results'
                     (click)='selectVideo($event, result)'
                     [ngClass]="{'search-result-selected': result.selected}">
                     <img class='search-result-thumbnail' src='{{result.videoThumbnail}}'/>
@@ -42,7 +42,9 @@
                 </div>
             </div>
             <div class="form-group form-inline" id='search-results-send-container'>
+                <button class="btn btn-default form-control" id='send-button' [disabled]="!(searchResults?.prevPageToken)" (click)='searchVideo(searchResults.prevPageToken)'>Previous</button>
                 <button class="btn btn-default form-control" id='send-button' (click)='sendSelectedVideos()'>Send</button>
+                <button class="btn btn-default form-control" id='send-button' [disabled]="!(searchResults?.nextPageToken)" (click)='searchVideo(searchResults.nextPageToken)'>Next</button>
             </div>
         </div>
     </div>

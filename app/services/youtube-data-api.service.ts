@@ -40,47 +40,28 @@ export class YoutubeDataApi {
         }
     }
 
-    public search2(query: string): SearchResult[] {
-        if (!this.gapiInitialised){
-            console.log('GAPI is not initialised');
-            return [];
-        } else {
-            let request = this.gapi.client.youtube.search.list({
-                    q: query,
-                    part: 'snippet',
-                    type: 'video'
-                }),
-                results : SearchResult[] = [], 
-                str;
-
-            request.execute(function(response) {
-                response['items'].forEach(element => {
-                    let id: string = element['id']['videoId'],
-                        title: string = element['snippet']['title'],
-                        thumb: string = element['snippet']['thumbnails']['default']['url'];
-                    results.push(new SearchResult(id, title, thumb))
-                });
-            });
-
-            console.log(results);
-            return results;
-        }
-    }
-
-    public search(query: string): Promise<SearchResult[]> {
-        return this.http.get('https://www.googleapis.com/youtube/v3/search?key=' + this._apiKey + '&part=snippet&q=' + query + '&type=video')
+    public search(query: string, pageToken: string): Promise<SearchResults> {
+        return this.http.get(
+                'https://www.googleapis.com/youtube/v3/search?key=' 
+                + this._apiKey 
+                + '&part=snippet&q=' + query 
+                + '&type=video' 
+                + (!!pageToken ? '&pageToken=' + pageToken : ''))
             .toPromise()
             .then(response => {
                 let json: JSON = response.json(),
-                    results : SearchResult[] = [];
+                    resultsArr : SearchResult[] = [],
+                    results: SearchResults;
+                    
 
                 json['items'].forEach(element => {
                     let id: string = element['id']['videoId'],
                         title: string = element['snippet']['title'],
                         thumb: string = element['snippet']['thumbnails']['default']['url'];
-                    results.push(new SearchResult(id, title, thumb))
+                    resultsArr.push(new SearchResult(id, title, thumb))
                 });
 
+                results = new SearchResults(json['nextPageToken'], json['prevPageToken'], resultsArr);
                 return results;
             });
     }

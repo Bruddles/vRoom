@@ -6,6 +6,7 @@ import { YoutubeDataApi } from './../../services/youtube-data-api.service';
 import { DataStoreService } from './../../services/data-store.service';
 
 import { SearchResult } from './../../../objects/search-result'
+import { SearchResults } from './../../../objects/search-results'
 import { Video } from './../../../objects/video'
 
 
@@ -19,8 +20,9 @@ import { Video } from './../../../objects/video'
 export class RoomComponent {
     public url: string;
     public searchString: string
-    public searchResults: SearchResult[]
+    public searchResults: SearchResults
     public selectedResults: SearchResult[]
+
 
     constructor(private socketIoService: SocketIoService, 
         private youtubeDataApi : YoutubeDataApi,
@@ -44,15 +46,8 @@ export class RoomComponent {
         this.url = '';
     }
 
-    searchVideo2(){
-        let me = this;
-        //TODO: According to some reading, the gapi is being run outside of the angular zone, 
-        //and so it is waiting for the next digest cycle before updating the view, even through the model is updated instantly
-        this.searchResults = me.youtubeDataApi.search2(this.searchString);
-    }
-
-    searchVideo(){
-        this.youtubeDataApi.search(this.searchString).then(results => {
+    searchVideo(pageToken: string){
+        this.youtubeDataApi.search(this.searchString, pageToken).then(results => {
             this.searchResults = results;
         });
     }
