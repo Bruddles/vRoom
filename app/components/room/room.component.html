@@ -2,7 +2,7 @@
     <h1 id="welcome-header">
         Welcome to {{socketIoService.roomName}}, {{socketIoService.userName}}
     </h1>
-    <div id="room">
+    <div id='room'>
         <div id='video-player-container'>
             <div class="iframe-container">
                 <div id="player">Please join a room...</div>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div id='search-container'>
-            <div id='search-input-container'>
+            <div class='form-inline' id='search-input-container'>
                 <input class="form-control" id='search-input' [(ngModel)]='searchString' autocomplete='off' />
                 <button class="btn btn-default form-control" id='search-button' (click)='searchVideo()'>Search</button>
                 <!-- <button class="btn btn-default" id='search' (click)='searchVideo2()'>Search2</button> -->
@@ -41,7 +41,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group form-inline" id='search-results-send-container'>
+            <div class='form-inline' id='search-results-send-container'>
                 <button class="btn btn-default form-control" id='send-button' [disabled]="!(searchResults?.prevPageToken)" (click)='searchVideo(searchResults.prevPageToken)'>Previous</button>
                 <button class="btn btn-default form-control" id='send-button' (click)='sendSelectedVideos()'>Send</button>
                 <button class="btn btn-default form-control" id='send-button' [disabled]="!(searchResults?.nextPageToken)" (click)='searchVideo(searchResults.nextPageToken)'>Next</button>

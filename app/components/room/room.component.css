@@ -1,10 +1,11 @@
 #room-container {
-    height: 100%;
-    margin: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: baseline;
+
+    height: 100%;
+    margin: auto;
 }
 
 #welcome-header {
@@ -12,17 +13,21 @@
 }
 
 #room {
-    height: 100%;
-    width: 100%;
-    margin: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: stretch;
+    flex-flow: wrap;
+
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    padding: 0 10rem;
 }
 
 #video-player-container {
-	flex: 1 0 0;
+	flex: 2 0 0;
+    text-align: center;
 }
 
 .iframe-container {
@@ -44,18 +49,17 @@
 
 #video-queue {
     flex: 1 0 0;
-
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .queue-item{
+    display: flex;
+    flex-direction: row;
+
     flex: 1 0 0;
     
     height: 120px;
     padding: 1rem;
-
-    display: flex;
-    flex-direction: row;
 }
 
 .queue-item-id {
@@ -72,19 +76,7 @@
 }
 
 #search-input-container{
-    flex: 1 0 0;
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-}
-
-#search-input{
-    flex: 10 0 0;
-}
-
-#search-button{
-    flex: 1 1 0;
+    text-align: center;
 }
 
 #search-results-container {
@@ -93,18 +85,20 @@
     padding: 1rem;
     flex: 5 0 0;
     
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .search-result{
+    display: flex;
+    flex-direction: row;
+
     min-height: 120px;
     max-height: 120px;
     padding: 1rem;
 
     flex: 1 0 0;
 
-    display: flex;
-    flex-direction: row;
+    border: 0.5rem solid transparent;
 }
 
 .search-result-id {
@@ -116,5 +110,5 @@
 }
 
 #search-results-send-container {
-    flex: 1 0 0;
+    text-align: center;
 }
