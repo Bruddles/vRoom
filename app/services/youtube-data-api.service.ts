@@ -4,6 +4,7 @@ import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { SearchResult } from './../../objects/search-result'
+import { SearchResults } from './../../objects/search-results'
 
 @Injectable()
 export class YoutubeDataApi {
