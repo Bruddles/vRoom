@@ -42,7 +42,7 @@
                 defaultExtension: 'js'
             },
             'socket.io-client': { 
-                main: 'socket.io.js', 
+                main: './dist/socket.io.js', 
                 defaultExtension: "js" 
             },
             'youtube-player': { 
